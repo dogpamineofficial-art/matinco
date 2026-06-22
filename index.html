@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>말문일본어 — 하루면 말이 트이는</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#FBF6EC; --card:#FFFDF6; --ink:#22303F; --sub:#7E8693;
+  --gold:#C9952C; --gold-bg:#F8EFD8; --coral:#E2674A; --coral-bg:#FBE7E0;
+  --pink:#D96A8B; --green:#3E8E5A; --green-bg:#E2F0E6; --red:#C4453A; --red-bg:#F8E2DE;
+  --blue:#3E6E8E; --blue-bg:#E2EDF4; --line:#E8DFC9;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0; padding:0;}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  font-size:15px; line-height:1.6; min-height:100vh;
+  background-image:radial-gradient(#EFE6D2 1px, transparent 1px); background-size:22px 22px;
+}
+#app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
+/* ── 상단바 ── */
+#topbar{
+  position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:10px;
+  padding:12px 16px 10px; background:linear-gradient(180deg,#FBF6EC 75%,rgba(251,246,236,0));
+}
+#titlebox{flex:1; min-width:0;}
+.eyebrow{font-size:10.5px; font-weight:800; letter-spacing:.08em; color:var(--gold);}
+#apptitle{margin:0; font-size:19px; font-weight:900; letter-spacing:-.01em;}
+.iconbtn{
+  flex:none; width:40px; height:40px; border-radius:14px; border:1.5px solid var(--line);
+  background:var(--card); font-size:18px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:0 2px 0 rgba(34,48,63,.06);
+}
+.iconbtn.on{border-color:var(--gold); background:var(--gold-bg);}
+/* ── 진행 바 ── */
+#progressline{padding:0 16px; display:none;}
+#progressbar{height:8px; border-radius:99px; background:#EFE6D2; overflow:hidden; border:1px solid var(--line);}
+#progressfill{height:100%; width:0%; background:linear-gradient(90deg,var(--gold),#E2B344); border-radius:99px; transition:width .35s ease;}
+#chlabel{display:flex; align-items:center; padding:6px 16px 0; font-size:11px; font-weight:800; color:var(--sub);}
+#chlabeltxt{flex:1;}
+#prevbtn{font-size:11px; font-weight:800; color:var(--blue); background:none; border:none; padding:2px 0 2px 12px; font-family:inherit; cursor:pointer;}
+/* ── 무대 ── */
+#stage{flex:1; display:flex; flex-direction:column; gap:12px; padding:12px 16px 28px;}
+.card{
+  background:var(--card); border:1.5px solid var(--line); border-radius:18px;
+  padding:16px; box-shadow:0 3px 0 rgba(34,48,63,.05);
+}
+.card .h{font-size:16.5px; font-weight:900; margin:2px 0 6px; letter-spacing:-.01em;}
+.card .body{font-size:13px; font-weight:600; color:#3C4654; line-height:1.75;}
+.card .body b{color:var(--ink);}
+.eyebrow.gold-t{color:var(--gold);} .eyebrow.coral-t{color:var(--coral);} .eyebrow.green-t{color:var(--green);} .eyebrow.blue-t{color:var(--blue);}
+.caption{font-size:11px; font-weight:700; color:var(--sub); line-height:1.6; padding:0 4px;}
+/* ── 버튼 ── */
+.btnrow{display:flex; flex-direction:column; gap:8px;}
+.btn{
+  width:100%; border:none; border-radius:16px; padding:14px 16px; font-size:14.5px; font-weight:900;
+  font-family:inherit; cursor:pointer; letter-spacing:-.01em; box-shadow:0 3px 0 rgba(34,48,63,.12);
+  transition:transform .06s ease;
+}
+.btn:active{transform:translateY(2px); box-shadow:0 1px 0 rgba(34,48,63,.12);}
+.btn.primary{background:var(--blue); color:#fff;}
+.btn.gold{background:linear-gradient(135deg,#D9A532,#C9952C); color:#fff;}
+.btn.coral{background:var(--coral); color:#fff;}
+.btn.green{background:var(--green); color:#fff;}
+.btn.ghost{background:var(--card); color:var(--ink); border:1.5px solid var(--line); box-shadow:0 2px 0 rgba(34,48,63,.06);}
+.btn.sm{padding:10px 12px; font-size:13px; border-radius:13px;}
+.btn:disabled{opacity:.4; pointer-events:none;}
+/* ── 퀴즈 선택지 ── */
+.opt{
+  width:100%; text-align:left; background:var(--card); border:1.5px solid var(--line); border-radius:15px;
+  padding:13px 14px; font-size:14px; font-weight:800; font-family:inherit; cursor:pointer;
+  box-shadow:0 2px 0 rgba(34,48,63,.06); line-height:1.5;
+}
+.opt.right{border-color:var(--green); background:var(--green-bg);}
+.opt.wrong{border-color:var(--red); background:var(--red-bg);}
+.feedback{border-radius:14px; padding:12px 14px; font-size:13px; font-weight:700; line-height:1.7;}
+.feedback.good{background:var(--green-bg); border:1.5px solid var(--green); color:#27503A;}
+.feedback.bad{background:var(--red-bg); border:1.5px solid var(--red); color:#7A2D26;}
+/* ── 말문 칩 / 변신 위젯 ── */
+.bigword{font-size:26px; font-weight:900; letter-spacing:-.01em; line-height:1.3;}
+.bigword .stem{color:var(--coral);} .bigword .tail{color:var(--blue);}
+.meanline{font-size:14px; font-weight:800; color:var(--green); margin-top:2px;}
+.formula{font-size:11.5px; font-weight:800; color:var(--sub); margin-top:6px;}
+.chips{display:flex; flex-wrap:wrap; gap:7px;}
+.chip{
+  border:1.5px solid var(--line); background:var(--card); border-radius:99px; padding:8px 13px;
+  font-size:13px; font-weight:800; font-family:inherit; cursor:pointer; box-shadow:0 2px 0 rgba(34,48,63,.06);
+}
+.chip.sel{border-color:var(--coral); background:var(--coral-bg); color:#8A3A28;}
+.chip.tailchip.sel{border-color:var(--blue); background:var(--blue-bg); color:#27465A;}
+/* ── 문장 카드 ── */
+.phrase{
+  display:flex; align-items:center; gap:10px; background:var(--card); border:1.5px solid var(--line);
+  border-radius:15px; padding:12px 13px; cursor:pointer; box-shadow:0 2px 0 rgba(34,48,63,.06);
+}
+.phrase .jp{font-size:15.5px; font-weight:900;}
+.phrase .kr{font-size:12px; font-weight:700; color:var(--sub);}
+.phrase .spk{flex:none; font-size:16px;}
+/* ── 배열 퀴즈 ── */
+.slotline{min-height:48px; display:flex; flex-wrap:wrap; gap:7px; padding:10px; border:1.5px dashed var(--gold); border-radius:14px; background:var(--gold-bg);}
+.slotline:empty::before{content:"여기에 순서대로 눌러 담아요"; font-size:12px; font-weight:700; color:var(--sub);}
+/* ── 표 ── */
+.tbl{width:100%; border-collapse:collapse; font-size:13px;}
+.tbl td{padding:8px 6px; border-bottom:1px dashed var(--line); font-weight:700;}
+.tbl td:first-child{font-weight:900; color:var(--coral); white-space:nowrap;}
+.tbl td:last-child{color:var(--sub); font-size:12px;}
+/* ── 홈 코스 ── */
+.course{display:flex; align-items:center; gap:12px; background:var(--card); border:1.5px solid var(--line); border-radius:17px; padding:13px 14px; cursor:pointer; box-shadow:0 3px 0 rgba(34,48,63,.05);}
+.course .ic{font-size:26px; flex:none; width:40px; text-align:center;}
+.course .t{font-size:14.5px; font-weight:900;}
+.course .d{font-size:11.5px; font-weight:700; color:var(--sub); line-height:1.5;}
+.course .done{flex:none; font-size:18px;}
+/* ── 시뮬레이션 ── */
+.dialog{display:flex; gap:10px; align-items:flex-start;}
+.portrait{flex:none; width:52px; height:52px; border-radius:16px; background:var(--card); border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 2px 0 rgba(34,48,63,.06);}
+.bubble{flex:1; background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:11px 13px;}
+.bubble .who{font-size:10.5px; font-weight:800; color:var(--gold); margin-bottom:3px;}
+.bubble .txt{font-size:13.5px; font-weight:700; line-height:1.65;}
+.simhead{display:flex; justify-content:space-between; align-items:center; font-size:11.5px; font-weight:800; color:var(--sub);}
+.stamp{display:inline-block; border:3px solid var(--green); color:var(--green); border-radius:12px; padding:6px 14px; font-size:18px; font-weight:900; transform:rotate(-6deg); letter-spacing:.05em;}
+/* ── 애니메이션 ── */
+.fade-up{animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+.pop-in{animation:popIn .35s cubic-bezier(.2,1.4,.4,1) both;}
+@keyframes popIn{from{opacity:0; transform:scale(.92);} to{opacity:1; transform:scale(1);}}
+.shake{animation:shake .5s ease;}
+@keyframes shake{0%,100%{transform:none;}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+footer{padding:14px 18px 26px;}
+footer p{margin:0; font-size:10px; font-weight:600; color:#9AA3AE; line-height:1.65;}
+
+.iconbtn.on{background:var(--coral); color:#fff;}
+.spk{font-size:15px; opacity:.6; flex-shrink:0;}
+.phrase{cursor:pointer;}
+.tbl tr.say:hover td{background:var(--gold-bg);}
+.course.locked{opacity:.5;}
+.course.locked .ic{filter:grayscale(1);}
+.drillword{font-size:23px; font-weight:900; letter-spacing:.5px;}
+.drillword .rufly{display:inline-block; color:var(--red); animation:ruFly 1.3s ease-in forwards;}
+@keyframes ruFly{0%{opacity:1; transform:none;} 100%{opacity:0; transform:translateY(-22px) rotate(28deg);}}
+.drillword .tailpop{display:inline-block; color:var(--coral); animation:tailPop .5s 1.05s both;}
+@keyframes tailPop{from{opacity:0; transform:translateX(10px);} to{opacity:1; transform:none;}}
+
+/* ═══════════════ PREMIUM REFINEMENT LAYER (override) ═══════════════ */
+/* Same token NAMES so all logic-applied classes keep working — values only, retuned. */
+:root{
+  --bg:#F4F2EC;            /* warm porcelain — off the yellow cream */
+  --card:#FCFBF7;          /* crisp warm white */
+  --ink:#23272E;           /* deep warm ink */
+  --sub:#8C9099;           /* quiet grey */
+  --gold:#A9842F; --gold-bg:#F2EAD5;       /* antique leaf gold */
+  --coral:#C2573F; --coral-bg:#F5E3DC;     /* 朱 brick-vermilion */
+  --pink:#C16A82;
+  --green:#357552; --green-bg:#E3EDE6;     /* sage */
+  --red:#B5453B; --red-bg:#F3E1DD;
+  --blue:#33425E; --blue-bg:#E6E9F0;       /* 藍 indigo */
+  --line:#E7E2D6;          /* soft warm hairline */
+  --shadow-sm:0 1px 2px rgba(35,39,46,.05), 0 3px 10px -4px rgba(35,39,46,.10);
+  --shadow-md:0 1px 2px rgba(35,39,46,.05), 0 14px 32px -18px rgba(35,39,46,.22);
+}
+body{
+  background:radial-gradient(125% 70% at 50% -5%, #FBF9F3 0%, #F4F2EC 58%) fixed, var(--bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+/* Wordmark in a refined serif — the one signature type move */
+.eyebrow{ letter-spacing:.16em; font-size:10px; opacity:.95; }
+#apptitle{ font-family:"Gowun Batang", serif; font-weight:700; font-size:22px; letter-spacing:0; line-height:1.15; margin-top:1px; }
+.card .h{ letter-spacing:-.015em; color:var(--ink); }
+.bigword{ letter-spacing:-.02em; }
+.drillword{ letter-spacing:0; }
+/* Soft, layered shadows replace the flat offset (0 3px 0) look — the biggest premium signal */
+#stage{ gap:14px; padding:14px 16px 34px; }
+.card{ border:1px solid var(--line); border-radius:20px; padding:18px 17px; box-shadow:var(--shadow-md); }
+.btn{ border-radius:15px; box-shadow:var(--shadow-sm); letter-spacing:-.01em; }
+.btn:active{ transform:translateY(1px); box-shadow:0 1px 3px rgba(35,39,46,.12); }
+.btn.gold{ background:linear-gradient(135deg,#BE9540,#A0792B); }
+.btn.ghost{ border:1px solid var(--line); box-shadow:var(--shadow-sm); }
+.opt,.chip,.phrase,.course,.portrait,.bubble{ box-shadow:var(--shadow-sm); }
+.opt{ border:1px solid var(--line); border-radius:15px; }
+.opt:active{ transform:translateY(1px); }
+.chip{ border:1px solid var(--line); }
+.phrase,.course,.bubble{ border:1px solid var(--line); }
+.iconbtn{ border:1px solid var(--line); border-radius:13px; box-shadow:var(--shadow-sm); }
+.iconbtn.on{ background:var(--coral); color:#fff; border-color:var(--coral); }
+.feedback{ border-radius:15px; }
+#progressbar{ border:1px solid var(--line); background:#ECE5D6; }
+#progressfill{ background:linear-gradient(90deg,var(--gold),#CBA655); }
+#topbar{ background:linear-gradient(180deg,#F4F2EC 68%, rgba(244,242,236,0)); }
+.slotline{ border:1.5px dashed var(--gold); border-radius:16px; }
+.stamp{ border-color:var(--coral); color:var(--coral); }
+.drillword .rufly{ color:var(--coral); }
+.drillword .tailpop{ color:var(--blue); }
+/* Quality floor */
+:focus-visible{ outline:2.5px solid var(--blue); outline-offset:2px; border-radius:9px; }
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+}
+/* ── 관문 타이머 ── */
+.timerbar{ height:7px; border-radius:99px; background:#ECE5D6; border:1px solid var(--line); overflow:hidden; margin:9px 0 3px; }
+.timerfill{ height:100%; width:100%; border-radius:99px; background:linear-gradient(90deg,var(--green),#62B187); transition:background .2s; }
+.timerbar.low .timerfill{ background:linear-gradient(90deg,var(--red),#D9685C); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div id="titlebox">
+      <div class="eyebrow" id="eyebrow">하루면 말이 트이는</div>
+      <h1 id="apptitle">말문일본어</h1>
+    </div>
+    <button class="iconbtn" id="voicebtn" title="일본어 발음 듣기 (ja-JP)">🔊</button>
+    <button class="iconbtn" id="homebtn" title="처음 화면으로" style="display:none;">🏠</button>
+  </div>
+  <div id="chlabel" style="display:none;"><span id="chlabeltxt"></span><button id="prevbtn">◂ 이전</button></div>
+  <div id="progressline"><div id="progressbar"><div id="progressfill"></div></div></div>
+  <div id="stage"></div>
+  <footer>
+    <p>본 앱은 일본어 입문 전, 한국어 구조와 한글 발음으로 말문을 여는 교육용 게임입니다. 한글 발음은 이해를 돕는 근사 표기로 실제 일본어 발음과 차이가 있을 수 있습니다. 🔊 발음 듣기는 기기의 일본어 음성(ja-JP)으로 읽어 줍니다. 효과음은 나는데 발음만 안 들린다면 기기에 일본어 음성이 없는 경우예요 — <b>안드로이드</b>는 설정 > 일반(또는 시스템) > 언어 > 음성/TTS 출력에서 일본어를 추가하고, <b>아이폰</b>은 설정 > 손쉬운 사용 > 말하기 콘텐츠 > 음성에서 일본어를 받으면 들립니다. 한글 표기는 이해를 돕는 근사 표기입니다. 문자(히라가나·가타카나)와 정확한 발음·예외 문법은 다음 단계에서 배우는 것을 권장합니다.</p>
+  </footer>
+</div>
+<script>
+/* ═══════════ 코어: 상태 · 소리 · 라우터 · 학습 엔진 (오답 1회 허용 게이트) ═══════════ */
+const $ = (s)=>document.querySelector(s);
+function elN(h){ const t=document.createElement("template"); t.innerHTML=h.trim(); return t.content.firstChild; }
+const stage = $("#stage");
+
+/* 저장: localStorage → sessionStorage → 메모리 폴백 */
+const store = (()=>{
+  let mem = {}, backend = null, mode = "memory";
+  function ok(st){ try{ st.setItem("__t","1"); st.removeItem("__t"); return true; }catch(e){ return false; } }
+  try{ if(typeof localStorage!=="undefined" && ok(localStorage)){ backend=localStorage; mode="local"; } }catch(e){}
+  if(!backend){ try{ if(typeof sessionStorage!=="undefined" && ok(sessionStorage)){ backend=sessionStorage; mode="session"; } }catch(e){} }
+  return {
+    mode,
+    get(){ try{ const raw = backend ? backend.getItem("malmun_v1") : mem.v; return JSON.parse(raw)||{}; }catch(e){ return {}; } },
+    set(d){ const s=JSON.stringify(d); try{ if(backend) backend.setItem("malmun_v1", s); else mem.v=s; }catch(e){ mem.v=s; } },
+  };
+})();
+const S = Object.assign({voice:true, done:{}, mode:"home", ch:null, step:0, miss:0}, store.get());
+S.mode="home"; S.ch=null; S.step=0; S.miss=0;
+function save(){ store.set({voice:S.voice, done:S.done}); }
+
+/* ── 효과음 ── */
+let actx=null;
+function tone(f,dur,delay=0,type="sine",vol=.1){
+  try{
+    if(typeof AudioContext==="undefined" && typeof webkitAudioContext==="undefined") return;
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==="suspended"){ try{ actx.resume(); }catch(e){} }
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type=type; o.frequency.value=f; o.connect(g); g.connect(actx.destination);
+    const t=actx.currentTime+delay;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.015);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.start(t); o.stop(t+dur+.05);
+  }catch(e){}
+}
+const sfx = {
+  tap:()=>tone(660,.07,0,"triangle",.07),
+  good:()=>{tone(740,.12); tone(988,.18,.1);},
+  bad:()=>tone(180,.26,0,"sawtooth",.08),
+  coin:()=>{tone(1175,.09); tone(1568,.14,.07);},
+  win:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,.22,i*.13));},
+};
+/* 발음 듣기: 한글 표기를 일본어 원문으로 바꿔 ja-JP 음성으로 읽는다 */
+let _jaVoice=null, _voiceReady=false;
+function pickJaVoice(){
+  try{
+    const vs=speechSynthesis.getVoices()||[];
+    if(vs.length){
+      _jaVoice = vs.find(v=>/ja[-_]?JP/i.test(v.lang))
+              || vs.find(v=>/^ja/i.test(v.lang))
+              || vs.find(v=>/japan/i.test(v.name||""))
+              || null;
+      _voiceReady=true;
+    }
+  }catch(e){}
+}
+if(typeof speechSynthesis!=="undefined"){
+  pickJaVoice();
+  try{ speechSynthesis.onvoiceschanged=pickJaVoice; }catch(e){}
+}
+/* 모바일(iOS/안드로이드): 첫 탭에서 오디오·음성 잠금 해제 */
+let _audioUnlocked=false;
+function unlockAudio(){
+  if(_audioUnlocked) return; _audioUnlocked=true;
+  try{
+    actx = actx || ((window.AudioContext||window.webkitAudioContext) ? new (window.AudioContext||window.webkitAudioContext)() : null);
+    if(actx && actx.state==="suspended") actx.resume();
+  }catch(e){}
+  try{
+    if(typeof speechSynthesis!=="undefined"){
+      pickJaVoice();
+      // 무음 워밍업: iOS는 첫 발화를 제스처 안에서 한 번 깨워야 이후 자동 발화가 됨
+      const warm=new SpeechSynthesisUtterance(" ");
+      warm.volume=0; warm.lang="ja-JP"; if(_jaVoice) warm.voice=_jaVoice;
+      speechSynthesis.speak(warm);
+    }
+  }catch(e){}
+}
+if(typeof document!=="undefined"){
+  ["touchend","click","pointerdown"].forEach(ev=>{
+    document.addEventListener(ev, unlockAudio, {once:false, passive:true});
+  });
+  // 첫 호출 후엔 리스너 부담 줄이기 위해 unlock 내부 가드로 처리됨
+}
+let _ttsWarned=false;
+function speak(kr, opt){
+  if(S.ch==="ch0") return; /* 0장은 한국어 구조 학습 — 일본어 발음 생략 */
+  if(!S.voice || typeof speechSynthesis==="undefined") return;
+  let text = (typeof toJP==="function") ? toJP(kr) : String(kr||"").replace(/<[^>]+>/g,"");
+  /* 일본어만 발음: "= 뜻" 꼬리 + 이모티콘·한글·로마자 제거 (반말 설명 등에서 한글/이모지가 읽히지 않도록) */
+  if(text){
+    const sp = text.indexOf(" = "); if(sp>=0) text = text.slice(0,sp);
+    text = Array.from(text).filter(function(ch){
+      const c = ch.codePointAt(0);
+      if(c===0x20) return true;                 // 공백
+      if(c>=0x3000 && c<=0x30FF) return true;   // 일본어 구두점 + 히라가나 + 가타카나(ー포함)
+      if(c>=0x3400 && c<=0x9FFF) return true;   // 한자
+      if(c>=0xFF00 && c<=0xFFEF) return true;   // 전각 기호 + 반각 가타카나
+      return false;                              // 한글 · 로마자 · 이모지 제거
+    }).join("").trim();
+  }
+  if(!text) return;
+  try{
+    pickJaVoice(); /* 모바일 지연 로딩 대비: 매번 최신 목록 확인 */
+    if(speechSynthesis.speaking || speechSynthesis.pending){ try{ speechSynthesis.cancel(); }catch(e){} }
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="ja-JP"; u.pitch=1.0;
+    u.rate = (opt&&opt.slow) ? 0.62 : 0.9;
+    if(_jaVoice) u.voice=_jaVoice;  /* 일본어 음성이 있으면 지정, 없으면 lang만으로 OS 엔진에 위임 */
+    speechSynthesis.speak(u);
+    /* 음성팩이 정말 없을 때(목록은 찼는데 ja 없음) 1회 안내 */
+    if(!_jaVoice && _voiceReady && !_ttsWarned){
+      _ttsWarned=true;
+      setTimeout(()=>{ try{
+        if(typeof toast==="function") toast("이 기기에 일본어 음성이 없어 발음이 안 들릴 수 있어요. 설정 > 음성(TTS)에서 일본어를 추가하면 들립니다.");
+        else console.warn("ja-JP voice not installed");
+      }catch(e){} }, 50);
+    }
+  }catch(e){}
+}
+(function(){
+  const b=$("#voicebtn"); if(!b) return;
+  function paint(){ b.textContent = S.voice ? "🔊" : "🔇"; b.classList.toggle("on", S.voice); }
+  paint();
+  b.addEventListener("click",()=>{ S.voice=!S.voice; save(); paint();
+    if(!S.voice){ if(typeof speechSynthesis!=="undefined"){ try{speechSynthesis.cancel();}catch(e){} } sfx.bad(); }
+    else sfx.coin(); });
+})();
+
+/* ── 라우터 ── */
+function setHead(eb,h1){ $("#eyebrow").textContent=eb; $("#apptitle").textContent=h1; }
+function chrome(mode){
+  const inCh = mode==="ch";
+  $("#homebtn").style.display = (mode==="home"||mode==="intro") ? "none" : "flex";
+  $("#chlabel").style.display = inCh ? "flex" : "none";
+  $("#progressline").style.display = inCh ? "block" : "none";
+  window.scrollTo({top:0});
+}
+function goHome(){
+  S.mode="home"; S.ch=null;
+  setHead("하루면 말이 트이는","말문일본어");
+  chrome("home"); renderHome();
+}
+$("#homebtn").onclick=()=>{ sfx.tap(); goHome(); };
+
+/* ── 챕터 엔진 ── */
+const CHS = {};
+function startCh(id, step=0){
+  S.mode="ch"; S.ch=id; S.step=step; S.miss=0;
+  const ch=CHS[id];
+  setHead(ch.eyebrow||"말문일본어", ch.title);
+  chrome("ch"); renderStep();
+}
+function renderStep(){
+  const ch=CHS[S.ch]; const steps=ch.steps;
+  $("#chlabeltxt").textContent = `📍 ${ch.label||ch.title} · ${S.step+1} / ${steps.length}` + (S.miss?` · 실수 ${S.miss}`:"");
+  $("#progressfill").style.width = Math.round(((S.step+1)/steps.length)*100)+"%";
+  stage.innerHTML="";
+  steps[S.step](stage);
+  $("#prevbtn").textContent = S.step===0 ? "◂ 나가기" : "◂ 이전";
+  window.scrollTo({top:0});
+}
+function next(){
+  const ch=CHS[S.ch];
+  if(S.step < ch.steps.length-1){ S.step++; renderStep(); }
+  else{
+    S.done[ch.id]=true; save(); sfx.win();
+    if(ch.onDone) ch.onDone(); else goHome();
+  }
+}
+function prev(){ if(S.step>0){ S.step--; renderStep(); } else { const ch=CHS[S.ch]; (ch&&ch.back)?ch.back():goHome(); } }
+$("#prevbtn").onclick=()=>{ sfx.tap(); prev(); };
+
+/* ── 공용 빌더 ── */
+function btnRow(label,tone,fn){
+  const r=elN(`<div class="btnrow fade-up"><button class="btn ${tone||"primary"}">${label}</button></div>`);
+  r.querySelector(".btn").onclick=()=>{ sfx.tap(); fn(); };
+  return r;
+}
+function lesson({eyebrow,title,html,btn="다음 ▸",tone="primary",extra}){
+  return (root)=>{
+    root.appendChild(elN(`<div class="card fade-up">
+      ${eyebrow?`<div class="eyebrow gold-t">${eyebrow}</div>`:""}
+      ${title?`<div class="h">${title}</div>`:""}
+      <div class="body">${html}</div></div>`));
+    if(extra) extra(root);
+    root.appendChild(btnRow(btn,tone,next));
+  };
+}
+/* 객관식 — 오답이면 정답을 바로 숙지시키고 진행, 실수 1회까지 챕터 통과 */
+function mc({tag="퀴즈",q,opts,answer,why,tip}){
+  return (root)=>{
+    root.appendChild(elN(`<div class="card fade-up"><div class="eyebrow coral-t">✏️ ${tag}</div>
+      <div class="h" style="font-size:15px;">${q}</div></div>`));
+    const wrap=elN(`<div class="btnrow fade-up"></div>`);
+    const fb=elN(`<div></div>`);
+    const items = opts.map((o,i)=>({o, right:i===answer})).sort(()=>Math.random()-.5);
+    items.forEach((it)=>{
+      const b=document.createElement("button"); b.className="opt"; b.innerHTML=it.o;
+      b._right=it.right;
+      b.onclick=()=>{
+        [...wrap.children].forEach(x=>x.style.pointerEvents="none");
+        if(it.right){
+          b.classList.add("right"); sfx.good(); speak(opts[answer]);
+          fb.innerHTML=`<div class="feedback good">⭕ 정답! ${why}${tip?`<br/><span style="font-size:11.5px;color:#27503A;">💡 ${tip}</span>`:""}</div>
+            <div class="btnrow" style="margin-top:10px;"><button class="btn primary">다음 ▸</button></div>`;
+        }else{
+          S.miss++; b.classList.add("wrong","shake"); sfx.bad();
+          [...wrap.children].find(x=>x._right).classList.add("right");
+          fb.innerHTML=`<div class="feedback bad">🙅 아쉬워요! 정답은 <b>${opts[answer]}</b>예요.<br/>${why}${tip?`<br/><span style="font-size:11.5px;">💡 ${tip}</span>`:""}<br/><span style="font-size:11px;">한 번 더 입으로 읽고 넘어가요. (이번 코스 실수 ${S.miss}개 — 1개까지 통과!)</span></div>
+            <div class="btnrow" style="margin-top:10px;"><button class="btn primary">숙지했어요, 다음 ▸</button></div>`;
+        }
+        $("#chlabeltxt").textContent=$("#chlabeltxt").textContent.replace(/( · 실수 \d+)?$/, S.miss?` · 실수 ${S.miss}`:"");
+        fb.querySelector(".btn").onclick=()=>{ sfx.tap(); next(); };
+      };
+      wrap.appendChild(b);
+    });
+    root.appendChild(wrap); root.appendChild(fb);
+  };
+}
+/* 형태 집중 드릴 — 흩어진 낱말 조각을 순서대로 조립, 실수 카운트 없음(학습 단계) */
+function buildDrill({tag, formula, rounds, btn="공식 장착 완료 ▸", tone="coral"}){
+  return (root)=>{
+    const head=elN(`<div class="card fade-up"><div class="eyebrow coral-t">🧱 ${tag}</div>
+      <div class="h" style="font-size:14.5px;">${formula}</div>
+      <div class="body" id="dgoal"></div></div>`);
+    const slot=elN(`<div class="slotline fade-up" id="dslot"></div>`);
+    const mean=elN(`<div id="dmean" style="min-height:32px; padding:2px 6px; text-align:center; font-size:18px; font-weight:800; color:var(--ink);"></div>`);
+    const pool=elN(`<div class="chips fade-up" id="dpool" style="padding:2px;"></div>`);
+    const res=elN(`<div id="dres"></div>`);
+    const ctrl=elN(`<div></div>`);
+    let ri=0, picked=[], order=[];
+    function fin(){
+      head.querySelector("#dgoal").innerHTML=`<b>${rounds.length}연속 성공!</b> 같은 꼬리를 반복하니 공식이 보이죠?`;
+      res.insertAdjacentHTML("beforeend", `<div class="feedback good pop-in" style="margin-top:8px;">🎉 공식이 손에 붙었어요!</div>`);
+      ctrl.appendChild(btnRow(btn,tone,next));
+    }
+    function draw(){
+      const r=rounds[ri];
+      head.querySelector("#dgoal").innerHTML=`흩어진 조각을 눌러 만들어 보세요 (${ri+1}/${rounds.length}): <b>${r.ko}</b>`;
+      slot.innerHTML=""; pool.innerHTML="";
+      picked.forEach(p=>slot.appendChild(elN(`<span class="chip sel" style="cursor:default;">${p}</span>`)));
+      if(picked.length===0){ order=[...r.parts, ...(r.extra||[])].sort(()=>Math.random()-.5); mean.innerHTML=""; }
+      order.filter(p=>{ const used=picked.filter(x=>x===p).length, tot=r.parts.filter(x=>x===p).length; return used<tot; })
+        .forEach(p=>{
+          const c=elN(`<button class="chip">${p}</button>`);
+          c.onclick=()=>{
+            if(picked.length===0) res.innerHTML="";
+            const need=r.parts[picked.length];
+            if(p===need){
+              sfx.coin(); picked.push(p);
+              if(picked.length===1){ speak(r.parts[0]); }
+              if(picked.length===1 && r.pm){
+                const sp=r.pm.indexOf(" = ");
+                mean.innerHTML = sp>0
+                  ? `💡 <b style="color:var(--coral);">${r.pm.slice(0,sp)}</b> = ${r.pm.slice(sp+3)}`
+                  : `💡 ${r.pm}`;
+              }
+              if(picked.length===r.parts.length){
+                sfx.good(); speak(r.jp); pool.innerHTML="";
+                const last=(ri===rounds.length-1);
+                const noteHtml = r.note?`<br/><span style="font-size:11px;">${r.note}</span>`:"";
+                const body = r.swap
+                  ? `✨ <span class="drillword"><span class="rufly">${r.stem}</span> <span class="tailpop">${r.jp}</span></span><br/>기본형이 사라지고 → <span style="font-size:18px; font-weight:900;"><b>${r.jp}</b> = ${r.ko}</span>${noteHtml}`
+                  : r.fly
+                  ? `✨ <span class="drillword">${r.stem}<span class="rufly">루</span><span class="tailpop">${r.tail}</span></span><br/>루가 날아가고 → <span style="font-size:18px; font-weight:900;"><b>${r.jp}</b> = ${r.ko}</span>${noteHtml}`
+                  : `✨ <span style="font-size:18px; font-weight:900;"><b>${r.jp}</b> = ${r.ko}</span>${noteHtml}`;
+                res.innerHTML=`<div class="feedback good pop-in">${body}
+                  <div class="btnrow" style="margin-top:10px;"><button class="btn ${last?"gold":"primary"} sm">${last?"마지막! 정리 ▸":"다음 단어 ▸"}</button></div></div>`;
+                res.querySelector(".btn").onclick=()=>{ sfx.tap(); ri++; picked=[];
+                  if(ri<rounds.length){ res.innerHTML=""; draw(); }
+                  else { slot.innerHTML=""; fin(); } };
+              } else draw();
+            }else{
+              sfx.bad(); c.classList.add("shake"); setTimeout(()=>{ try{c.classList.remove("shake");}catch(e){} },450);
+              pool.innerHTML="";
+              res.innerHTML=`<div class="feedback bad pop-in">❌ 틀렸어요! <b>${rounds.length}개 연속 정답</b>해야 통과 — 처음부터 다시!<div class="btnrow" style="margin-top:10px;"><button class="btn coral sm">처음부터 다시 ▸</button></div></div>`;
+              res.querySelector(".btn").onclick=()=>{ sfx.tap(); ri=0; picked=[]; order=[]; res.innerHTML=""; slot.innerHTML=""; draw(); };
+            }
+          };
+          pool.appendChild(c);
+        });
+    }
+    draw();
+    root.appendChild(head); root.appendChild(slot); root.appendChild(mean); root.appendChild(pool); root.appendChild(res); root.appendChild(ctrl);
+  };
+}
+/* 한 조사 집중 드릴 — 정답은 항상 같은 조사 (주입식, 오답은 흔들리기만) */
+function pickDrill({p, kr, items, decoys}){
+  return (root)=>{
+    const head=elN(`<div class="card fade-up"><div class="eyebrow coral-t">🧷 ${p} 집중 ×${items.length}</div>
+      <div class="h" style="font-size:15px;">${p} = ${kr}</div>
+      <div class="body" id="pgoal"></div></div>`);
+    const pool=elN(`<div class="btnrow fade-up" id="pdpool"></div>`);
+    const res=elN(`<div id="pdres"></div>`);
+    const ctrl=elN(`<div></div>`);
+    let i=0;
+    function fin(){
+      head.querySelector("#pgoal").innerHTML=`<b>${items.length}연속 성공!</b> 이제 ${p}는 자동으로 나옵니다.`;
+      res.insertAdjacentHTML("beforeend", `<div class="feedback good pop-in" style="margin-top:8px;">🎉 ${p} 장착 완료!</div>`);
+      ctrl.appendChild(btnRow("다음 ▸","coral",next));
+    }
+    function draw(){
+      const it=items[i];
+      head.querySelector("#pgoal").innerHTML=`(${i+1}/${items.length}) <b>${it.w}</b> + __ = "${it.ko}"`;
+      pool.innerHTML="";
+      [p, ...decoys].sort(()=>Math.random()-.5).forEach(c=>{
+        const b=elN(`<button class="opt" style="padding:12px 8px;">${c}</button>`); b._right=(c===p);
+        b.onclick=()=>{
+          if(b._right){ sfx.coin(); speak(it.w.replace(/\(.*?\)/,"")+p); pool.innerHTML="";
+            res.innerHTML=`<div class="feedback good pop-in">✨ <span style="font-size:18px; font-weight:900;"><b>${it.w.replace(/\(.*?\)/,"")}${p}</b> = ${it.ko}</span>
+              <div class="btnrow" style="margin-top:10px;"><button class="btn primary sm">다음 ▸</button></div></div>`;
+            res.querySelector(".btn").onclick=()=>{ sfx.tap(); i++; res.innerHTML="";
+              if(i<items.length) draw(); else fin(); };
+          }else{ sfx.bad(); b.classList.add("shake"); setTimeout(()=>{ try{b.classList.remove("shake");}catch(e){} },450); }
+        };
+        pool.appendChild(b);
+      });
+    }
+    draw();
+    root.appendChild(head); root.appendChild(pool); root.appendChild(res); root.appendChild(ctrl);
+  };
+}
+/* 무오답 관문 — 랜덤 n문제, 하나라도 틀리면 처음부터 (코스 실수와 별개) */
+function gauntlet({tag, bank, n=10, sec}){
+  return (root)=>{
+    const head=elN(`<div class="card fade-up" style="border-color:var(--red);"><div class="eyebrow coral-t">🔥 ${tag}</div>
+      <div class="h" style="font-size:15px;">랜덤 ${n}문제 · ⏱️ 제한시간 — 틀리거나 늦으면 처음부터!</div>
+      <div class="timerbar"><div class="timerfill"></div></div>
+      <div class="body" id="ggoal"></div></div>`);
+    const pool=elN(`<div class="btnrow fade-up" id="gpool"></div>`);
+    const res=elN(`<div id="gres"></div>`);
+    const ctrl=elN(`<div></div>`);
+    const bar=head.querySelector(".timerbar"), fill=head.querySelector(".timerfill");
+    let order=[], i=0, timer=null;
+    function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+    function secsFor(it){ const base=(typeof sec==="number")?sec:7; const len=String(it&&it.q||"").replace(/<[^>]+>/g,"").length; return base + (len>34?3:0); }
+    function startTimer(it){
+      stopTimer();
+      const total=secsFor(it); let left=total;
+      if(fill) fill.style.width="100%"; if(bar) bar.classList.remove("low");
+      timer=setInterval(()=>{
+        if(!bar || !bar.isConnected){ stopTimer(); return; }   // 화면 이탈 시 자동 정리
+        left-=0.1;
+        const pct=Math.max(0,left/total*100);
+        if(fill) fill.style.width=pct+"%";
+        if(bar) bar.classList.toggle("low", pct<=33);
+        if(left<=0){ stopTimer(); timeUp(); }
+      },100);
+    }
+    function timeUp(){
+      sfx.bad(); [...pool.children].forEach(x=>x.style.pointerEvents="none");
+      res.innerHTML=`<div class="feedback bad pop-in">⏱️ 시간 초과! 무오답 관문 — 처음부터 다시!
+        <div class="btnrow" style="margin-top:10px;"><button class="btn coral">처음부터 다시 ▸</button></div></div>`;
+      res.querySelector(".btn").onclick=()=>{ sfx.tap(); reshuffle(); draw(); };
+    }
+    function reshuffle(){ order=[...bank].sort(()=>Math.random()-.5).slice(0,n); i=0; }
+    function fin(){
+      stopTimer(); if(fill) fill.style.width="100%"; if(bar) bar.classList.remove("low");
+      head.querySelector("#ggoal").innerHTML=`<b>${n}연속 무오답!</b>`;
+      pool.innerHTML="";
+      res.innerHTML=`<div class="feedback good pop-in">🏆 퍼펙트! 완전히 몸에 붙었어요.</div>`;
+      ctrl.appendChild(btnRow("관문 통과 ▸","gold",next));
+    }
+    function draw(){
+      const it=order[i];
+      head.querySelector("#ggoal").innerHTML=`(${i+1}/${n}) ${it.q}`;
+      pool.innerHTML=""; res.innerHTML="";
+      startTimer(it);
+      [...it.opts].sort(()=>Math.random()-.5).forEach(c=>{
+        const b=elN(`<button class="opt" style="padding:12px 8px;">${c}</button>`); b._right=(c===it.a);
+        b.onclick=()=>{
+          if(b._right){ stopTimer(); sfx.coin(); speak(it.say||(it.r&&it.r.split(" = ")[0])||it.a); pool.innerHTML="";
+            res.innerHTML=`<div class="feedback good pop-in">✨ <span style="font-size:18px; font-weight:900;">${it.r}</span>
+              <div class="btnrow" style="margin-top:10px;"><button class="btn primary sm">다음 ▸</button></div></div>`;
+            res.querySelector(".btn").onclick=()=>{ sfx.tap(); i++;
+              if(i<n) draw(); else fin(); };
+          }else{
+            stopTimer(); sfx.bad(); [...pool.children].forEach(x=>x.style.pointerEvents="none");
+            res.innerHTML=`<div class="feedback bad">🙅 정답은 <b>${it.a}</b> — ${it.akr}. 무오답 관문 — 처음부터 다시!</div>
+              <div class="btnrow" style="margin-top:10px;"><button class="btn coral">처음부터 다시 ▸</button></div>`;
+            res.querySelector(".btn").onclick=()=>{ sfx.tap(); reshuffle(); draw(); };
+          }
+        };
+        pool.appendChild(b);
+      });
+    }
+    root.appendChild(head); root.appendChild(pool); root.appendChild(res); root.appendChild(ctrl);
+    reshuffle(); draw();
+  };
+}
+
+/* 문장 배열 — 챕터 마지막 종합용, 확인 1회 판정 */
+function orderQ({tag="문장 배열",ko,words,answer,gloss}){
+  return (root)=>{
+    root.appendChild(elN(`<div class="card fade-up"><div class="eyebrow coral-t">🧩 ${tag}</div>
+      <div class="h" style="font-size:15px;">한국어: ${ko}</div>
+      <div class="body">배운 형태를 <b>문장</b>으로! 순서대로 눌러 완성 — 확인은 <b>한 번</b>만.</div></div>`));
+    const slot=elN(`<div class="slotline fade-up"></div>`);
+    const pool=elN(`<div class="chips fade-up" style="padding:2px;"></div>`);
+    const ctrl=elN(`<div class="btnrow fade-up" style="margin-top:2px;"><button class="btn gold" id="okq">확인하기 ✓</button></div>`);
+    const fb=elN(`<div></div>`);
+    const shuffled=[...words].sort(()=>Math.random()-.5);
+    let picked=[];
+    function draw(){
+      slot.innerHTML=""; pool.innerHTML="";
+      picked.forEach((p,i)=>{ const c=elN(`<button class="chip sel">${p}</button>`);
+        c.onclick=()=>{ sfx.tap(); picked.splice(i,1); draw(); }; slot.appendChild(c); });
+      shuffled.filter(p=>!picked.includes(p)).forEach(p=>{ const c=elN(`<button class="chip">${p}</button>`);
+        c.onclick=()=>{ sfx.tap(); picked.push(p); draw(); }; pool.appendChild(c); });
+      ctrl.querySelector("#okq").disabled = picked.length!==answer.length;
+    }
+    draw();
+    ctrl.querySelector("#okq").onclick=()=>{
+      slot.style.pointerEvents="none"; pool.style.pointerEvents="none"; ctrl.style.display="none";
+      if(picked.join("|")===answer.join("|")){
+        sfx.good(); speak(answer.join(" "));
+        fb.innerHTML=`<div class="feedback good">⭕ 완성! <b>${answer.join(" ")}</b><br/>${gloss}</div>
+          <div class="btnrow" style="margin-top:10px;"><button class="btn primary">다음 ▸</button></div>`;
+      }else{
+        S.miss++; sfx.bad(); slot.classList.add("shake");
+        fb.innerHTML=`<div class="feedback bad">🙅 아쉬워요! 정답 순서는 <b>${answer.join(" ")}</b>예요.<br/>${gloss}<br/><span style="font-size:11px;">한 번 더 입으로 읽고 넘어가요. (이번 코스 실수 ${S.miss}개 — 1개까지 통과!)</span></div>
+          <div class="btnrow" style="margin-top:10px;"><button class="btn primary">숙지했어요, 다음 ▸</button></div>`;
+      }
+      $("#chlabeltxt").textContent=$("#chlabeltxt").textContent.replace(/( · 실수 \d+)?$/, S.miss?` · 실수 ${S.miss}`:"");
+      fb.querySelector(".btn").onclick=()=>{ sfx.tap(); next(); };
+    };
+    root.appendChild(slot); root.appendChild(pool); root.appendChild(ctrl); root.appendChild(fb);
+  };
+}
+/* 완료 화면 — 실수 2개부터는 재도전 게이트 */
+function doneStep({title,html,btn="홈으로 ▸"}){
+  return (root)=>{
+    if(S.miss>=2){
+      const chId=S.ch, ch=CHS[chId];
+      root.appendChild(elN(`<div class="card pop-in" style="text-align:center; border-color:var(--red);">
+        <div style="font-size:34px;">🙈</div>
+        <div class="h">아깝다! 한 번만 더 다져요</div>
+        <div class="body" style="text-align:left;">이번 코스에서 <b>${S.miss}문제</b>를 놓쳤어요.<br/>실수 <b>1개까지는 통과</b>지만, 2개부터는 한 번 더 도전해야 완료 도장이 찍혀요.<br/><br/>틀렸던 해설을 떠올리며 다시 한 번 — 두 번째는 분명 더 빨라요!</div></div>`));
+      const r1=btnRow("🔁 다시 도전하기","coral",()=>startCh(chId));
+      const r2=btnRow(ch&&ch.back?"◂ 목록으로":"◂ 홈으로","ghost",()=>{ (ch&&ch.back)?ch.back():goHome(); });
+      root.appendChild(r1); root.appendChild(r2);
+      return;
+    }
+    root.appendChild(elN(`<div class="card pop-in" style="text-align:center; border-color:var(--green);">
+      <div style="display:flex; justify-content:center; margin-bottom:8px;"><div class="stamp">성공!</div></div>
+      <div class="h">${title}</div>
+      <div class="body" style="text-align:left;">${html}${S.miss===1?`<br/><br/><span style="font-size:11.5px; color:var(--sub);">📝 1문제는 아쉬웠지만 통과! 틀렸던 해설은 꼭 기억해 둬요.</span>`:""}</div></div>`));
+    root.appendChild(btnRow(btn,"gold",next));
+  };
+}
+</script>
+<script>
+/* ═══════════ 데이터: 동사 · 조사 · 육하원칙 · 이음말 · 문장 · 시나리오 ═══════════ */
+const TAILS_BAN = [
+  {e:"루",   tag:"기본 · ~하다",        f:"그대로 = 기본형"},
+  {e:"루?",  tag:"의문 · ~해?",         f:"끝을 올려 물으면 질문"},
+  {e:"요우", tag:"권유 · ~하자",        f:"루 빼고 + 요우"},
+  {e:"타이", tag:"희망 · ~하고 싶다",   f:"루 빼고 + 타이"},
+  {e:"타",   tag:"과거 · ~했다",        f:"루 빼고 + 타"},
+  {e:"타라", tag:"가정 · ~하면",        f:"과거에 라만! 루 빼고 + 타라"},
+  {e:"테",   tag:"명령 · ~해!",         f:"루 빼고 + 테"},
+  {e:"나이", tag:"부정 · ~지 않는다",   f:"루 빼고 + 나이"},
+];
+const TAILS_JON = [
+  {e:"마스",        tag:"기본 · ~합니다",        f:"루 빼고 + 마스"},
+  {e:"마스카",      tag:"의문 · ~합니까?",       f:"루 빼고 + 마스카"},
+  {e:"마쇼",        tag:"권유 · ~합시다",        f:"루 빼고 + 마쇼"},
+  {e:"타이데스",    tag:"희망 · ~하고 싶습니다", f:"루 빼고 + 타이데스"},
+  {e:"마시타",      tag:"과거 · ~했습니다",      f:"루 빼고 + 마시타"},
+  {e:"테 구다사이", tag:"부탁 · ~해 주세요",     f:"루 빼고 + 테 구다사이"},
+  {e:"마센",        tag:"부정 · ~하지 않습니다", f:"루 빼고 + 마센"},
+];
+const VERBS = [
+  {id:"taberu", base:"타베루", stem:"타베", mean:"먹다",
+   kr:{"루":"먹다","루?":"먹어?","요우":"먹자","타이":"먹고 싶다","타":"먹었다","타라":"먹으면","테":"먹어!","나이":"먹지 않는다",
+       "마스":"먹습니다","마스카":"먹습니까?","마쇼":"먹읍시다","타이데스":"먹고 싶습니다","마시타":"먹었습니다","테 구다사이":"먹어 주세요","마센":"먹지 않습니다"}},
+  {id:"miru", base:"미루", stem:"미", mean:"보다",
+   kr:{"루":"보다","루?":"봐?","요우":"보자","타이":"보고 싶다","타":"봤다","타라":"보면","테":"봐!","나이":"보지 않는다",
+       "마스":"봅니다","마스카":"봅니까?","마쇼":"봅시다","타이데스":"보고 싶습니다","마시타":"봤습니다","테 구다사이":"봐 주세요","마센":"보지 않습니다"}},
+  {id:"neru", base:"네루", stem:"네", mean:"자다",
+   kr:{"루":"자다","루?":"자?","요우":"자자","타이":"자고 싶다","타":"잤다","타라":"자면","테":"자!","나이":"자지 않는다",
+       "마스":"잡니다","마스카":"잡니까?","마쇼":"잡시다","타이데스":"자고 싶습니다","마시타":"잤습니다","테 구다사이":"자 주세요","마센":"자지 않습니다"}},
+  {id:"okiru", base:"오키루", stem:"오키", mean:"일어나다",
+   kr:{"루":"일어나다","루?":"일어나?","요우":"일어나자","타이":"일어나고 싶다","타":"일어났다","타라":"일어나면","테":"일어나!","나이":"일어나지 않는다",
+       "마스":"일어납니다","마스카":"일어납니까?","마쇼":"일어납시다","타이데스":"일어나고 싶습니다","마시타":"일어났습니다","테 구다사이":"일어나 주세요","마센":"일어나지 않습니다"}},
+  {id:"ireru", base:"이레루", stem:"이레", mean:"넣다",
+   kr:{"루":"넣다","루?":"넣어?","요우":"넣자","타이":"넣고 싶다","타":"넣었다","타라":"넣으면","테":"넣어!","나이":"넣지 않는다",
+       "마스":"넣습니다","마스카":"넣습니까?","마쇼":"넣읍시다","타이데스":"넣고 싶습니다","마시타":"넣었습니다","테 구다사이":"넣어 주세요","마센":"넣지 않습니다"}},
+];
+function jpForm(v, e){
+  if(e==="루") return v.base;
+  if(e==="루?") return v.base+"?";
+  return v.stem + e;
+}
+
+/* 변신이 다른 동사 — 본편 동사처럼 '반말/존댓말 형태별 변신'으로 구조화 */
+/* 반말 5형 (식당에서 쓰는 것) */
+const SP_FORMS_BAN = [
+  {e:"기본",     tag:"기본 · ~다"},
+  {e:"권유",     tag:"권유 · ~하자"},
+  {e:"희망",     tag:"희망 · ~하고 싶다"},
+  {e:"명령",     tag:"명령 · ~해!"},
+  {e:"과거",     tag:"과거 · ~했다"},
+  {e:"가정",     tag:"가정 · ~하면"},
+];
+/* 존댓말 5형 */
+const SP_FORMS_JON = [
+  {e:"마스",        tag:"기본 · ~합니다"},
+  {e:"마쇼",        tag:"권유 · ~합시다"},
+  {e:"타이데스",    tag:"희망 · ~하고 싶습니다"},
+  {e:"테 구다사이", tag:"부탁 · ~해 주세요"},
+  {e:"마시타",      tag:"과거 · ~했습니다"},
+];
+/* 각 동사: 형태별 완성형(jp)과 뜻(ko)을 직접 보유 — 한국어가 자연스럽게 */
+const VERBS_SP = [
+  {base:"이쿠", mean:"가다",
+   ban:{"기본":["이쿠","가다"],"권유":["이코우","가자"],"희망":["이키타이","가고 싶다"],"명령":["잇테","가!"],"과거":["잇타","갔다"],"가정":["잇타라","가면"]},
+   jon:{"마스":["이키마스","갑니다"],"마쇼":["이키마쇼","갑시다"],"타이데스":["이키타이데스","가고 싶습니다"],"테 구다사이":["잇테 구다사이","가 주세요"],"마시타":["이키마시타","갔습니다"]},
+   note:"이쿠는 이키·잇·이코우로 바뀌어요. 택시에서 '○○니 잇테 구다사이'!"},
+  {base:"노무", mean:"마시다",
+   ban:{"기본":["노무","마시다"],"권유":["노모우","마시자"],"희망":["노미타이","마시고 싶다"],"명령":["논데","마셔!"],"과거":["논다","마셨다"],"가정":["논다라","마시면"]},
+   jon:{"마스":["노미마스","마십니다"],"마쇼":["노미마쇼","마십시다"],"타이데스":["노미타이데스","마시고 싶습니다"],"테 구다사이":["논데 구다사이","마셔 주세요"],"마시타":["노미마시타","마셨습니다"]},
+   note:"노무는 노미·논·노모우로 바뀌어요. 비루오 노미타이데스 = 맥주를 마시고 싶습니다!"},
+  {base:"스루", mean:"하다",
+   ban:{"기본":["스루","하다"],"권유":["시요우","하자"],"희망":["시타이","하고 싶다"],"명령":["시테","해!"],"과거":["시타","했다"],"가정":["시타라","하면"]},
+   jon:{"마스":["시마스","합니다"],"마쇼":["시마쇼","합시다"],"타이데스":["시타이데스","하고 싶습니다"],"테 구다사이":["시테 구다사이","해 주세요"],"마시타":["시마시타","했습니다"]},
+   note:"스루는 거의 전부 '시'로! 요야쿠시테 구다사이 = 예약해 주세요."},
+  {base:"쿠루", mean:"오다",
+   ban:{"기본":["쿠루","오다"],"권유":["코요우","오자"],"희망":["키타이","오고 싶다"],"명령":["키테","와!"],"과거":["키타","왔다"],"가정":["키타라","오면"]},
+   jon:{"마스":["키마스","옵니다"],"마쇼":["키마쇼","옵시다"],"타이데스":["키타이데스","오고 싶습니다"],"테 구다사이":["키테 구다사이","와 주세요"],"마시타":["키마시타","왔습니다"]},
+   note:"쿠루는 키·코요우로! 캉코쿠카라 키마시타 = 한국에서 왔습니다."},
+];
+
+/* 조사 표 — 핵심 6개만 (나머지는 부록) */
+const PARTICLES = [
+  {p:"와", kr:"은 / 는", ex:"무료+와 → 무료와 = 무료는"},
+  {p:"오", kr:"을 / 를", ex:"야쿠소쿠(약속)+오 → 야쿠소쿠오 = 약속을"},
+  {p:"데", kr:"에서", ex:"소우루(서울)+데 → 소우루데 = 서울에서"},
+  {p:"토", kr:"랑", ex:"카조쿠(가족)+토 → 카조쿠토 = 가족이랑"},
+  {p:"마데", kr:"까지", ex:"호테루(호텔)+마데 → 호테루마데 = 호텔까지"},
+  {p:"카", kr:"질문 표시", ex:"무료+데스+카 → 무료데스카 = 무료입니까?"},
+];
+const PARTICLES_EX = [
+  {p:"가", kr:"이 / 가", ex:"라멘가 = 라멘이"},
+  {p:"니", kr:"에 / 에게", ex:"호테루니 = 호텔에"},
+  {p:"노", kr:"의", ex:"카조쿠노 = 가족의"},
+  {p:"모", kr:"도", ex:"무료모 = 무료도"},
+  {p:"카라", kr:"부터", ex:"소우루카라 = 서울부터"},
+];
+
+/* 육하원칙 — 영어 병기 */
+const QWORDS = [
+  {q:"이츠", kr:"언제 (when)", ex:"이츠데스카 = 언제입니까?"},
+  {q:"도코", kr:"어디 (where)", ex:"도코데스카 = 어디입니까?"},
+  {q:"다레", kr:"누구 (who)", ex:"다레데스카 = 누구입니까?"},
+  {q:"나니", kr:"무엇 (what)", ex:"나니데스카 = 무엇입니까?"},
+  {q:"도우", kr:"어떻게 (how)", ex:"도우데스카 = 어떻습니까?"},
+  {q:"도우시테", kr:"왜 (why)", ex:"도우시테데스카 = 왜입니까? (왜죠?)"},
+];
+const QCOMBO = [
+  {jp:"나니오",   kr:"무엇을",   mk:"나니(무엇) + 오(을)"},
+  {jp:"도코데",   kr:"어디서",   mk:"도코(어디) + 데(에서)"},
+  {jp:"다레토",   kr:"누구랑",   mk:"다레(누구) + 토(랑)"},
+  {jp:"이츠마데", kr:"언제까지", mk:"이츠(언제) + 마데(까지)"},
+];
+
+/* 이음말(접속어) */
+const CONJ = [
+  {jp:"소시테", kr:"그리고 (and)",      ex:"라멘, 소시테 교자 = 라멘, 그리고 교자"},
+  {jp:"데모",   kr:"하지만 (but)",      ex:"오이시이데스. 데모 타카이데스 = 맛있습니다. 하지만 비쌉니다"},
+  {jp:"소레데", kr:"그래서 (so)",       ex:"야스이데스. 소레데 코코데스 = 쌉니다. 그래서 여기입니다"},
+  {jp:"다카라", kr:"그러니까 (that's why)", ex:"다카라, 코레 구다사이 = 그러니까, 이것 주세요"},
+];
+
+/* 부록 데이터 — 본편과 겹치지 않는 실전 치트시트 */
+const NUMS = [
+  {jp:"이치", kr:"1"},{jp:"니", kr:"2"},{jp:"산", kr:"3"},{jp:"욘", kr:"4"},{jp:"고", kr:"5"},
+  {jp:"로쿠", kr:"6"},{jp:"나나", kr:"7"},{jp:"하치", kr:"8"},{jp:"큐", kr:"9"},{jp:"쥬", kr:"10"},
+  {jp:"햐쿠", kr:"100"},{jp:"센", kr:"1,000"},
+];
+/* 돈·시간 — 숫자에 단위를 붙이는 실전 */
+const MONEYTIME = [
+  {jp:"엔", kr:"엔(¥) — 센 엔 = 1,000엔"},
+  {jp:"이쿠라데스카", kr:"얼마입니까?"},
+  {jp:"고햐쿠 엔", kr:"500엔 (고+햐쿠+엔)"},
+  {jp:"니 지", kr:"2시 (니+지)"},
+  {jp:"난지데스카", kr:"몇 시입니까?"},
+  {jp:"쿄우", kr:"오늘"},
+  {jp:"아시타", kr:"내일"},
+];
+/* 여행 명사 — 공항·역·거리 확장 */
+const TRAVELN = [
+  {jp:"에키", kr:"역"},{jp:"쿠우코우", kr:"공항"},{jp:"덴샤", kr:"전철"},{jp:"바스", kr:"버스"},
+  {jp:"미세", kr:"가게"},{jp:"토이레", kr:"화장실"},{jp:"코코", kr:"여기"},{jp:"카도", kr:"카드"},
+];
+/* 상황별 한마디 — 공식으로 못 만드는 통째 실전 표현 */
+const SURVIVE = [
+  {jp:"다이죠부데스", kr:"괜찮습니다 (사양·안심 둘 다)"},
+  {jp:"왓카리마셍", kr:"모르겠습니다 / 못 알아들었어요"},
+  {jp:"못토 육쿠리 오네가이시마스", kr:"좀 더 천천히 부탁합니다"},
+  {jp:"에이고 데키마스카", kr:"영어 되나요?"},
+  {jp:"타스케테", kr:"도와주세요! (응급)"},
+  {jp:"코레와 난데스카", kr:"이것은 뭔가요?"},
+];
+
+/* ----- "배운 김에 더!" 확장 데이터 ----- */
+/* 자주 쓰는 형용사 - 전부 이로 끝나 데스 공식 그대로 (외울 활용 0) */
+const ADJ_MORE = [
+  {jp:"아츠이", kr:"덥다"},
+  {jp:"사무이", kr:"춥다"},
+  {jp:"마즈이", kr:"맛없다"},
+  {jp:"치카이", kr:"가깝다"},
+  {jp:"토오이", kr:"멀다"},
+  {jp:"하야이", kr:"빠르다"},
+  {jp:"오소이", kr:"느리다 / 늦다"},
+  {jp:"오오이", kr:"많다"},
+  {jp:"스쿠나이", kr:"적다"},
+  {jp:"아타라시이", kr:"새롭다"},
+  {jp:"우레시이", kr:"기쁘다"},
+  {jp:"무즈카시이", kr:"어렵다"},
+];
+
+/* 반말 <-> 존댓말 짝 표현 (자주 쓰는 한마디) */
+const CASUAL_PAIR = [
+  {ban:"치가우", jon:"치가이마스", kr:"아니다/틀리다 (no, that's wrong)"},
+  {ban:"다이죠부", jon:"다이죠부데스", kr:"괜찮다 (it's OK)"},
+  {ban:"이이", jon:"이이데스", kr:"좋다 (good / fine)"},
+  {ban:"와카루", jon:"와카리마스", kr:"알겠다 (I see / got it)"},
+  {ban:"고멘네", jon:"고멘나사이", kr:"미안 / 죄송합니다 (sorry)"},
+  {ban:"혼토", jon:"혼토데스카", kr:"정말? (really?)"},
+];
+
+
+
+/* 4장 사전 단어/* 4장 사전 단어 */
+const WORDS4 = [
+  {jp:"오미즈", kr:"물 (미즈를 공손하게)"},{jp:"오스스메", kr:"추천"},{jp:"토이레", kr:"화장실"},
+  {jp:"이쿠라", kr:"얼마"},{jp:"카도", kr:"카드"},{jp:"겐킨", kr:"현금"},
+  {jp:"카이케이", kr:"계산"},{jp:"베츠베츠", kr:"따로따로"},{jp:"데키마스카", kr:"됩니까?"},
+];
+
+/* 식당 생존 문장 — 배운 공식으로만 */
+const PHRASES = [
+  {cat:"🍜 주문 — 명사 + 구다사이", list:[
+    ["코레 구다사이","이것 주세요","메뉴를 손가락으로 가리키며!"],
+    ["오미즈 구다사이","물 주세요"],
+  ]},
+  {cat:"❓ 질문 — 육하원칙 + 데스카", list:[
+    ["오스스메와 나니데스카","추천은 무엇입니까?","나니 = 무엇 (what)"],
+    ["토이레와 도코데스카","화장실은 어디입니까?","도코 = 어디 (where). 여행 1순위 질문!"],
+    ["이쿠라데스카","얼마입니까?"],
+    ["카도 데키마스카","카드 됩니까?"],
+  ]},
+  {cat:"😋 맛·상태 — 데스", list:[
+    ["오이시이데스","맛있습니다"],
+    ["스고이데스","대단합니다","감탄 만능!"],
+    ["타카이데스","비쌉니다"],
+    ["겐킨데스","현금입니다"],
+  ]},
+  {cat:"💭 희망 · 🙌 권유·부탁", list:[
+    ["코레오 타베타이데스","이것을 먹고 싶습니다"],
+    ["잇쇼니 타베마쇼","같이 먹읍시다"],
+    ["카이케이 오네가이시마스","계산 부탁합니다"],
+    ["베츠베츠데 오네가이시마스","따로따로 부탁합니다"],
+  ]},
+];
+
+/* 식당 시뮬레이션 — 각 스테이지 사전 단어 + 4지선다 */
+const STAGES = [
+  {id:"sim1", icon:"🍜", title:"라멘집 입장", goal:"기본 주문 말문 트기",
+   vocab:[
+    {jp:"이랏샤이마세", kr:"어서 오세요 (점원이 먼저 건네는 인사)"},
+    {jp:"코레", kr:"이것"},{jp:"오미즈", kr:"물"},{jp:"오스스메", kr:"추천"},
+    {jp:"나니데스카", kr:"무엇입니까? (나니=무엇 what)"},
+    {jp:"오이시이데스", kr:"맛있습니다"},
+    {jp:"고치소사마데시타", kr:"잘 먹었습니다 (식사 후 통째 인사)"},
+   ],
+   items:[
+    {situ:"후쿠오카 라멘집에 들어왔어요. 메뉴판에서 먹고 싶은 라멘을 손가락으로 가리켰어요. <b>\"이것 주세요\"</b>라고 말해 보세요!",
+     who:"라멘집 직원", icon:"👩‍🍳", line:"이랏샤이마세~! 무엇을 드릴까요?",
+     choices:["코레 구다사이","오이시이데스","카이케이 오네가이시마스","오스스메 오네가이시마스"], a:"코레 구다사이",
+     why:"코레 = 이것, 구다사이 = 주세요 → <b>코레 구다사이 = 이것 주세요</b>"},
+    {situ:"라멘을 기다리는데 목이 말라요. <b>\"물 주세요\"</b>라고 말해 보세요!",
+     who:"라멘집 직원", icon:"👩‍🍳", line:"네~ 필요한 거 있으세요?",
+     choices:["오미즈 구다사이","라멘데스","타베마쇼","오이시이데스"], a:"오미즈 구다사이",
+     why:"오미즈 = 물, 구다사이 = 주세요 → <b>물 주세요</b>"},
+    {situ:"메뉴가 너무 많아요! 직원에게 <b>\"추천은 무엇입니까?\"</b>라고 물어보세요. (육하원칙 — 나니 = 무엇!)",
+     who:"라멘집 직원", icon:"👩‍🍳", line:"처음 오셨나요? 😊",
+     choices:["오스스메와 나니데스카","고치소사마데시타","코레와 나니데스카","칸파이"], a:"오스스메와 나니데스카",
+     why:"오스스메 = 추천, 와 = 은/는, 나니데스카 = 무엇입니까 → <b>추천은 무엇입니까?</b>",
+     tip:"코레와 나니데스카는 '이것은 무엇입니까?' — 묻는 대상이 달라요!"},
+    {situ:"라멘을 한입 — 정말 맛있어요! 직원에게 <b>\"맛있습니다\"</b>라고 말해 보세요.",
+     who:"라멘집 직원", icon:"👩‍🍳", line:"맛이 어떠세요?",
+     choices:["오이시이데스","타카이데스","야스이데스","코레 구다사이"], a:"오이시이데스",
+     why:"오이시이 = 맛있다 + 데스 → <b>맛있습니다</b>"},
+    {situ:"국물까지 싹 비웠어요. 나가면서 <b>\"잘 먹었습니다\"</b>라고 인사해 보세요!",
+     who:"라멘집 직원", icon:"👩‍🍳", line:"아리가토 고자이마시타~!",
+     choices:["고치소사마데시타","아리가토 고자이마스","코레오 타베타이데스","라멘오 타베마스"], a:"고치소사마데시타",
+     why:"<b>고치소사마데시타</b> = 식사를 마친 뒤 하는 '잘 먹었습니다'. 아리가토 고자이마스(감사합니다)는 도움 전반에 쓰는 인사예요!"},
+  ]},
+  {id:"sim2", icon:"😊", title:"옆자리 일본인과 합류", goal:"AI 통역 없이 친해지는 한마디",
+   vocab:[
+    {jp:"캉코쿠진", kr:"한국 사람"},{jp:"~데스카", kr:"~입니까? (질문)"},
+    {jp:"캉코쿠카라", kr:"한국에서 (카라=부터)"},{jp:"키마시타", kr:"왔습니다 (통째로!)"},
+    {jp:"잇쇼니", kr:"같이"},{jp:"타베마쇼", kr:"먹읍시다"},
+    {jp:"타노시이데스", kr:"재미있습니다"},
+   ],
+   items:[
+    {situ:"옆자리 일본 사람이 말을 걸어요. \"한국 분이세요?\" 하는 분위기! <b>\"한국 사람입니다\"</b>라고 답해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"앗, 혹시… 캉코쿠진데스카?",
+     choices:["캉코쿠진데스","캉코쿠카라 키마시타","오이시이데스","코레 구다사이"], a:"캉코쿠진데스",
+     why:"캉코쿠진 = 한국 사람 + 데스 = 입니다 → <b>한국 사람입니다</b>",
+     tip:"캉코쿠카라 키마시타는 '한국에서 왔습니다' — 다음 질문의 답이에요!"},
+    {situ:"어디서 왔는지 물어봐요. <b>\"한국에서 왔습니다\"</b>라고 말해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"오~ 어디서 오셨어요?",
+     choices:["캉코쿠카라 키마시타","캉코쿠진데스","라멘오 타베마스","타카이데스"], a:"캉코쿠카라 키마시타",
+     why:"캉코쿠카라 = 한국에서(부터), 키마시타 = 왔습니다 → <b>한국에서 왔습니다</b>"},
+    {situ:"추천 메뉴를 나눠 먹자는 분위기! <b>\"같이 먹읍시다\"</b>라고 말해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"이 메뉴 진짜 맛있는데… 좀 드셔 볼래요?",
+     choices:["잇쇼니 타베마쇼","타베마쇼","코레 구다사이","라멘데스"], a:"잇쇼니 타베마쇼",
+     why:"잇쇼니 = 같이, 타베마쇼 = 먹읍시다 → <b>같이 먹읍시다</b>",
+     tip:"타베마쇼만 말하면 '먹읍시다' — '같이'의 잇쇼니를 꼭 붙여요!"},
+    {situ:"나눠 먹은 음식이 맛있어요! <b>\"맛있습니다\"</b>라고 말해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"어때요, 입에 맞아요?",
+     choices:["오이시이데스","타노시이데스","카라이데스","카도 데키마스카"], a:"오이시이데스",
+     why:"<b>오이시이데스 = 맛있습니다</b> — 타노시이데스(재미있습니다)와 헷갈리지 않기!"},
+    {situ:"대화가 정말 즐거워요. <b>\"재미있습니다\"</b>라고 말해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"하하, 한국 이야기 더 들려주세요!",
+     choices:["타노시이데스","오이시이데스","타카이데스","오미즈 구다사이"], a:"타노시이데스",
+     why:"타노시이 = 재미있다 + 데스 → <b>재미있습니다</b>"},
+  ]},
+  {id:"sim3", icon:"🍻", title:"이자카야에서 건배", goal:"같이 마시는 분위기 만들기",
+   vocab:[
+    {jp:"비루", kr:"맥주"},{jp:"노미타이데스", kr:"마시고 싶습니다 (통째로! 변신 비밀은 심화에서)"},
+    {jp:"노미마쇼", kr:"마십시다 (통째로!)"},{jp:"칸파이", kr:"건배"},
+    {jp:"모우 잇카이", kr:"한 번 더"},{jp:"타노시캇타데스", kr:"즐거웠습니다 (지난 일 — 통째로!)"},
+   ],
+   items:[
+    {situ:"이자카야에 왔어요! <b>\"맥주를 마시고 싶습니다\"</b>라고 말해 보세요.",
+     who:"이자카야 점원", icon:"🍻", line:"음료는 무엇으로 하시겠어요?",
+     choices:["비루오 노미타이데스","비루데스카","비루오 타베마스","비루데스"], a:"비루오 노미타이데스",
+     why:"비루오 = 맥주를, 노미타이데스 = 마시고 싶습니다 → <b>맥주를 마시고 싶습니다</b>",
+     tip:"타베마스는 '먹습니다' — 마시는 건 노미!"},
+    {situ:"잔이 나왔어요! 다 함께 잔을 들고 — <b>건배!</b>",
+     who:"옆자리 일본인", icon:"😊", line:"자, 다 같이~!",
+     choices:["칸파이","고치소사마데시타","오스스메","카이케이"], a:"칸파이",
+     why:"<b>칸파이 = 건배!</b> 가장 신나는 한마디죠."},
+    {situ:"분위기가 무르익었어요. <b>\"같이 마십시다\"</b>라고 말해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"한 잔 더 어때요?",
+     choices:["잇쇼니 노미마쇼","잇쇼니 타베마쇼","노미마쇼","오미즈 구다사이"], a:"잇쇼니 노미마쇼",
+     why:"잇쇼니 = 같이, 노미마쇼 = 마십시다 → <b>같이 마십시다</b>",
+     tip:"잇쇼니 타베마쇼는 '같이 먹읍시다' — 먹기/마시기 구분!"},
+    {situ:"한 잔 더 부탁하고 싶어요. <b>\"한 번 더 부탁합니다\"</b>!",
+     who:"이자카야 점원", icon:"🍻", line:"네~ 부르셨어요?",
+     choices:["모우 잇카이 오네가이시마스","카이케이 오네가이시마스","오이시이데스","캉코쿠진데스"], a:"모우 잇카이 오네가이시마스",
+     why:"모우 잇카이 = 한 번 더, 오네가이시마스 = 부탁합니다 → <b>한 번 더 부탁합니다</b>"},
+    {situ:"오늘 이자카야, 정말 즐거웠어요. <b>\"즐거웠습니다\"</b>라고 말해 보세요.",
+     who:"옆자리 일본인", icon:"😊", line:"오늘 정말 반가웠어요!",
+     choices:["타노시캇타데스","타노시이데스","아리가토 고자이마스","타베테 구다사이"], a:"타노시캇타데스",
+     why:"타노시이데스 = 재미있습니다(지금) / <b>타노시캇타데스 = 즐거웠습니다(지난 일)</b>"},
+  ]},
+  {id:"sim4", icon:"💴", title:"계산하기", goal:"깔끔하게 마무리하는 말문",
+   vocab:[
+    {jp:"카이케이", kr:"계산"},{jp:"카도", kr:"카드 (일본 발음은 '카도'!)"},
+    {jp:"데키마스카", kr:"됩니까?"},{jp:"겐킨", kr:"현금"},
+    {jp:"베츠베츠데", kr:"따로따로 (베츠베츠=따로따로 + 데)"},
+    {jp:"고치소사마데시타", kr:"잘 먹었습니다"},
+   ],
+   items:[
+    {situ:"식사가 끝났어요. <b>\"계산 부탁합니다\"</b>라고 말해 보세요.",
+     who:"직원", icon:"🙇", line:"식사 다 하셨어요?",
+     choices:["카이케이 오네가이시마스","베츠베츠데 오네가이시마스","코레 구다사이","타베마쇼"], a:"카이케이 오네가이시마스",
+     why:"카이케이 = 계산, 오네가이시마스 = 부탁합니다 → <b>계산 부탁합니다</b>"},
+    {situ:"카드로 낼 수 있는지 궁금해요. <b>\"카드 됩니까?\"</b>",
+     who:"직원", icon:"🙇", line:"결제는 어떻게 하시겠어요?",
+     choices:["카도 데키마스카","겐킨데스","카도데스","카도오 타베마스"], a:"카도 데키마스카",
+     why:"카도 = 카드, 데키마스카 = 됩니까? → <b>카도 데키마스카 = 카드 됩니까?</b>"},
+    {situ:"이번엔 현금으로! <b>\"현금입니다\"</b>라고 말해 보세요.",
+     who:"직원", icon:"🙇", line:"네, 알겠습니다!",
+     choices:["겐킨데스","카도 데키마스카","오이시이데스","코코데스"], a:"겐킨데스",
+     why:"겐킨 = 현금 + 데스 = 입니다 → <b>현금입니다</b>"},
+    {situ:"친구와 각자 내고 싶어요. <b>\"따로따로 부탁합니다\"</b>!",
+     who:"직원", icon:"🙇", line:"같이 계산해 드릴까요?",
+     choices:["베츠베츠데 오네가이시마스","카이케이 오네가이시마스","잇쇼니 타베마쇼","비루오 노미타이데스"], a:"베츠베츠데 오네가이시마스",
+     why:"베츠베츠데 = 따로따로, 오네가이시마스 = 부탁합니다 → <b>따로따로 부탁합니다</b>"},
+    {situ:"계산을 마치고 나가면서 — <b>\"잘 먹었습니다\"</b>!",
+     who:"직원", icon:"🙇", line:"또 오세요~!",
+     choices:["고치소사마데시타","아리가토 고자이마스","오스스메와 나니데스카","라멘오 타베타이데스"], a:"고치소사마데시타",
+     why:"<b>고치소사마데시타</b> — 식사 마무리 전용 인사! (아리가토 고자이마스는 일반 감사 인사)"},
+  ]},
+];
+</script>
+<script>
+/* ═══════════ 한글 발음 → 일본어 원문 사전 (ja-JP TTS 전용, 화면 비노출) ═══════════ */
+/* 화면엔 항상 한글 표기만 보이고, 발음 듣기 시 이 표를 거쳐 일본어를 읽는다. */
+const JP = {
+  // ── 동사 7종 × 활용 (본편) ──
+  "타베루":"たべる","타베루?":"たべる？","타베요우":"たべよう","타베타이":"たべたい","타베타":"たべた","타베테":"たべて","타베나이":"たべない",
+  "타베마스":"たべます","타베마스카":"たべますか","타베마쇼":"たべましょう","타베타이데스":"たべたいです","타베마시타":"たべました","타베테 구다사이":"たべてください","타베마센":"たべません",
+  "미루":"みる","미루?":"みる？","미요우":"みよう","미타이":"みたい","미타":"みた","미테":"みて","미나이":"みない",
+  "미마스":"みます","미마스카":"みますか","미마쇼":"みましょう","미타이데스":"みたいです","미마시타":"みました","미테 구다사이":"みてください","미마센":"みません",
+  "네루":"ねる","네루?":"ねる？","네요우":"ねよう","네타이":"ねたい","네타":"ねた","네테":"ねて","네나이":"ねない",
+  "네마스":"ねます","네마스카":"ねますか","네마쇼":"ねましょう","네마시타":"ねました","네마센":"ねません",
+  "오키루":"おきる","오키타이":"おきたい","오키테":"おきて",
+  "아케루":"あける","아케루?":"あける？","아케요우":"あけよう","아케타이":"あけたい","아케타":"あけた","아케테":"あけて","아케나이":"あけない",
+  "아케마스":"あけます","아케마스카":"あけますか","아케테 구다사이":"あけてください",
+  "시메루":"しめる","시메타":"しめた","시메테":"しめて","시메타이":"しめたい","시메나이":"しめない","시메요우":"しめよう",
+  "이레루":"いれる","이레루?":"いれる？",
+  // ── 특수동사 ──
+  "이쿠":"いく","이코우":"いこう","이키타이":"いきたい","잇테":"いって","잇타":"いった","이키마스":"いきます","이키마쇼":"いきましょう","이키타이데스":"いきたいです","잇테 구다사이":"いってください","이키마시타":"いきました",
+  "노무":"のむ","노모우":"のもう","노미타이":"のみたい","논데":"のんで","논다":"のんだ","노미마스":"のみます","노미마쇼":"のみましょう","노미타이데스":"のみたいです","논데 구다사이":"のんでください","노미마시타":"のみました",
+  "스루":"する","시요우":"しよう","시타이":"したい","시테":"して","시타":"した","시마스":"します","시마쇼":"しましょう","시타이데스":"したいです","시테 구다사이":"してください","시마시타":"しました",
+  "쿠루":"くる","코요우":"こよう","키타이":"きたい","키테":"きて","키타":"きた","키마스":"きます","키마쇼":"きましょう","키타이데스":"きたいです","키테 구다사이":"きてください","키마시타":"きました",
+  // ── 명사·형용사 ──
+  "라멘":"ラーメン","미즈":"みず","오미즈":"おみず","코코":"ここ","코레":"これ","카도":"カード","메뉴":"メニュー","겐킨":"げんきん","비루":"ビール","토이레":"トイレ","오스스메":"おすすめ","이쿠라":"いくら","카이케이":"かいけい","베츠베츠":"べつべつ","토테모":"とても","잇쇼니":"いっしょに","에키":"えき","미세":"みせ","토모다치":"ともだち","쿠우코우":"くうこう","덴샤":"でんしゃ","바스":"バス",
+  "오이시이":"おいしい","스고이":"すごい","타카이":"たかい","야스이":"やすい","카와이이":"かわいい","타노시이":"たのしい","카라이":"からい","사무이":"さむい","아츠이":"あつい","이이":"いい","타노시캇타":"たのしかった",
+  // 명사+데스
+  "라멘데스":"ラーメンです","미즈데스":"みずです","코코데스":"ここです","카도데스":"カードです","메뉴데스":"メニューです","겐킨데스":"げんきんです","비루데스":"ビールです",
+  "오이시이데스":"おいしいです","스고이데스":"すごいです","타카이데스":"たかいです","야스이데스":"やすいです","카와이이데스":"かわいいです","타노시이데스":"たのしいです","카라이데스":"からいです","이이데스":"いいです","타노시캇타데스":"たのしかったです",
+  // ── 조사 결합 예시(표) ──
+  "무료":"むりょう","무료와":"むりょうは","무료모":"むりょうも","무료데스":"むりょうです","무료데스카":"むりょうですか",
+  "유료데스카":"ゆうりょうですか",
+  "라멘데스카":"ラーメンですか",
+  "호테루데스카":"ホテルですか",
+  "카조쿠데스카":"かぞくですか",
+  "코레데스카":"これですか",
+  "카도데스카":"カードですか",
+  "비루데스카":"ビールですか",
+  "겐킨데스카":"げんきんですか","유료":"ゆうりょう","유료데스":"ゆうりょうです",
+  "야쿠소쿠":"やくそく","야쿠소쿠오":"やくそくを","카조쿠":"かぞく","카조쿠와":"かぞくは","카조쿠토":"かぞくと","카조쿠노":"かぞくの","카조쿠모":"かぞくも","카조쿠데스":"かぞくです",
+  "소우루":"ソウル","소우루데":"ソウルで","소우루카라":"ソウルから","호테루":"ホテル","호테루니":"ホテルに","호테루마데":"ホテルまで","호테루데스":"ホテルです","호테루카라":"ホテルから",
+  "라멘가":"ラーメンガ","라멘오":"ラーメンを","라멘와":"ラーメンは","라멘토":"ラーメンと","라멘모":"ラーメンも",
+  "토쿄":"とうきょう","토쿄데":"とうきょうで","토쿄마데":"とうきょうまで","토쿄카라":"とうきょうから","니혼":"にほん","니혼데":"にほんで","니혼노":"にほんの","니혼카라":"にほんから","푸산":"プサン","푸산마데":"プサンまで","교자":"ぎょうざ","교자토":"ぎょうざと",
+  "코레가":"これガ","코레모":"これも","코레와":"これは","와타시":"わたし","와타시와":"わたしは","와타시노":"わたしの","와타시모":"わたしも","와타시가":"わたしが","토모다치니":"ともだちに","토모다치노":"ともだちの","토모다치토":"ともだちと","코코니":"ここに","코코카라":"ここから","미즈모":"みずも","미즈가":"みずガ",
+  // ── 육하원칙 ──
+  "이츠":"いつ","도코":"どこ","다레":"だれ","나니":"なに","도우":"どう","도우시테":"どうして",
+  "이츠데스카":"いつですか","도코데스카":"どこですか","다레데스카":"だれですか","나니데스카":"なにですか","도우데스카":"どうですか","도우시테데스카":"どうしてですか",
+  "나니오":"なにを","도코데":"どこで","도코니":"どこに","다레가":"だれが","다레토":"だれと","이츠카라":"いつから","이츠마데":"いつまで",
+  // ── 이음말 ──
+  "소시테":"そして","데모":"でも","소레데":"それで","다카라":"だから",
+  // ── 생존 문장 / 시뮬 ──
+  "코레 구다사이":"これください",
+  "구다사이":"ください","오미즈 구다사이":"おみずください","라멘 구다사이":"ラーメンください","메뉴 구다사이":"メニューください",
+  "오스스메와 나니데스카":"おすすめはなにですか","토이레와 도코데스카":"トイレはどこですか","코레와 나니데스카":"これはなにですか","이쿠라데스카":"いくらですか","카도 데키마스카":"カードできますか",
+  "코레오 타베타이데스":"これをたべたいです","라멘오 타베타이데스":"ラーメンをたべたいです","잇쇼니 타베마쇼":"いっしょにたべましょう","오스스메 오네가이시마스":"おすすめおねがいします","카이케이 오네가이시마스":"かいけいおねがいします","베츠베츠데 오네가이시마스":"べつべつでおねがいします",
+  "토테모 오이시이데스":"とてもおいしいです","라멘오 타베마스":"ラーメンをたべます","라멘오 타베테":"ラーメンをたべて","라멘오 타베타":"ラーメンをたべた","라멘오 타베루?":"ラーメンをたべる？","카조쿠토 미요우":"かぞくとみよう","카조쿠토 타베마쇼":"かぞくとたべましょう","라멘오 타베마스카":"ラーメンをたべますか","라멘오 타베테 구다사이":"ラーメンをたべてください","라멘오 타베마시타":"ラーメンをたべました","라멘오 타베마센":"ラーメンをたべません",
+  // 인사말
+  "이랏샤이마세":"いらっしゃいませ","스미마셍":"すみません","아리가토 고자이마스":"ありがとうございます","고치소사마데시타":"ごちそうさまでした","칸파이":"かんぱい","오네가이시마스":"おねがいします","이타다키마스":"いただきます",
+  "코레 오네가이시마스":"これおねがいします","오미즈 오네가이시마스":"おみずおねがいします",
+  // 시뮬 추가
+  "캉코쿠진데스":"かんこくじんです","캉코쿠카라 키마시타":"かんこくからきました","비루오 노미타이데스":"ビールをのみたいです","잇쇼니 노미마쇼":"いっしょにのみましょう","모우 잇카이 오네가이시마스":"もういっかいおねがいします",
+  // 특수동사 실전
+  "호테루니 잇테 구다사이":"ホテルにいってください",
+  // 보너스/부록
+  "고햐쿠 엔":"ごひゃくえん","엔":"えん","니 지":"にじ","난지데스카":"なんじですか","쿄우":"きょう","아시타":"あした",
+  "다이죠부데스":"だいじょうぶです","왓카리마셍":"わかりません","못토 육쿠리 오네가이시마스":"もっとゆっくりおねがいします","에이고 데키마스카":"えいごできますか","타스케테":"たすけて","코레와 난데스카":"これはなんですか",
+  // 숫자
+  "이치":"いち","니":"ニ","산":"さん","욘":"よん","고":"ご","로쿠":"ろく","나나":"なな","하치":"はち","큐":"きゅう","쥬":"じゅう","햐쿠":"ひゃく","센":"せん",
+  // 같은 말(부록)
+  "코소쿠":"こうそく","카방":"かばん","키분":"きぶん","무리":"むり","쥰비":"じゅんび","칸탄":"かんたん","안신":"あんしん","온도":"おんど","지칸":"じかん","운도":"うんどう","산포":"さんぽ",
+  "네타이데스":"ねたいです",
+  "네테 구다사이":"ねてください",
+  "시메루?":"しめる？",
+  "시메마센":"しめません",
+  "시메마쇼":"しめましょう",
+  "시메마스":"しめます",
+  "시메마스카":"しめますか",
+  "시메마시타":"しめました",
+  "시메타이데스":"しめたいです",
+  "시메테 구다사이":"しめてください",
+  "아케마센":"あけません",
+  "아케마쇼":"あけましょう",
+  "아케마시타":"あけました",
+  "아케타이데스":"あけたいです",
+  "오키나이":"おきない",
+  "오키루?":"おきる？",
+  "오키마센":"おきません",
+  "오키마쇼":"おきましょう",
+  "오키마스":"おきます",
+  "오키마스카":"おきますか",
+  "오키마시타":"おきました",
+  "오키요우":"おきよう",
+  "오키타":"おきた",
+  "오키타이데스":"おきたいです",
+  "오키테 구다사이":"おきてください",
+  "이레나이":"いれない",
+  "이레마센":"いれません",
+  "이레마쇼":"いれましょう",
+  "이레마스":"いれます",
+  "이레마스카":"いれますか",
+  "이레마시타":"いれました",
+  "이레요우":"いれよう",
+  "이레타":"いれた",
+  "이레타이":"いれたい",
+  "이레타이데스":"いれたいです",
+  "이레테":"いれて",
+  "이레테 구다사이":"いれてください",
+  "츠카레타데스":"つかれたです",
+  "카에리마스":"かえります",
+  "츠카레타":"つかれた",
+  "카에루":"かえる",
+  "캉코쿠진":"かんこくじん",
+  "~데스카":"ですか",
+  "캉코쿠카라":"かんこくから",
+  "모우 잇카이":"もういっかい",
+  "데키마스카":"できますか",
+  "베츠베츠데":"べつべつで",
+  "카조쿠가":"かぞくガ",
+  "호테루가":"ホテルガ",
+  "토쿄니":"とうきょうに",
+  "니혼니":"にほんに",
+  "호테루노":"ホテルの",
+  "가":"ガ",
+  "노":"ノ",
+  "모":"モ",
+  "카라":"カラ",
+  "와":"ワ",
+  "오":"オ",
+  "데":"デ",
+  "토":"ト",
+  "마데":"マデ",
+  "마즈이":"まずい",
+  "마즈이데스":"まずいです",
+  "치카이":"ちかい",
+  "치카이데스":"ちかいです",
+  "토오이":"とおい",
+  "토오이데스":"とおいです",
+  "하야이":"はやい",
+  "하야이데스":"はやいです",
+  "오소이":"おそい",
+  "오소이데스":"おそいです",
+  "오오이":"おおい",
+  "오오이데스":"おおいです",
+  "스쿠나이":"すくない",
+  "스쿠나이데스":"すくないです",
+  "아타라시이":"あたらしい",
+  "아타라시이데스":"あたらしいです",
+  "우레시이":"うれしい",
+  "우레시이데스":"うれしいです",
+  "무즈카시이":"むずかしい",
+  "무즈카시이데스":"むずかしいです",
+  "데키마스":"できます",
+  "요야쿠":"よやく",
+  "요야쿠 데키마스카":"よやくできますか",
+  "와이파이":"ワイファイ",
+  "와이파이 데키마스카":"ワイファイできますか",
+  "카도 데키마스":"カードできます",
+  "츠모리":"つもり",
+  "츠모리데스":"つもりです",
+  "타베루 츠모리데스":"たべるつもりです",
+  "이쿠 츠모리데스":"いくつもりです",
+  "카우 츠모리데스":"かうつもりです",
+  "미루 츠모리데스":"みるつもりです",
+  "데쇼":"でしょう",
+  "오이시이데쇼":"おいしいでしょう",
+  "타카이데쇼":"たかいでしょう",
+  "아메데쇼":"あめでしょう",
+  "아메":"あめ",
+  "다이죠부데쇼":"だいじょうぶでしょう",
+  "카우":"かう",
+  "치가우":"ちがう",
+  "치가이마스":"ちがいます",
+  "다이죠부":"だいじょうぶ",
+  "고멘네":"ごめんね",
+  "고멘나사이":"ごめんなさい",
+  "이이요":"いいよ",
+  "혼토":"ほんとう",
+  "혼토데스카":"ほんとうですか",
+  "마타네":"またね",
+  "마타 아이마쇼":"またあいましょう",
+  "야바이":"やばい",
+  "와카루":"わかる",
+  "와카리마스":"わかります",
+  "타베테 미테모 이이데스카":"たべてみてもいいですか",
+  "미테모":"みても",
+  "데스카":"ですか",
+  "타베테 미테":"たべてみて",
+  "아츠이데스":"あついです",
+  "사무이데스":"さむいです",
+  "타베타라":"たべたら","미타라":"みたら","네타라":"ねたら","오키타라":"おきたら","아케타라":"あけたら","시메타라":"しめたら","이레타라":"いれたら",
+  "잇타라":"いったら","논다라":"のんだら","시타라":"したら","키타라":"きたら",
+  "라멘오 타베타라":"ラーメンをたべたら",
+};
+/* 한글 표기 문자열 → 일본어 원문 (없으면 그대로 반환). 끝의 ? 보존 */
+function toJP(kr){
+  if(kr==null) return "";
+  let t = String(kr).replace(/<[^>]+>/g,"").trim();
+  if(JP[t]) return JP[t];
+  // 구두점(. , ? !)과 공백을 구분자로 토큰 분리 후 각 토큰을 변환·결합
+  // 구두점은 일본어 문장부호로 살려 자연스러운 끊어읽기 유도
+  if(/[\s.,!?。、]/.test(t)){
+    const out=[];
+    const re=/([^\s.,!?。、]+)|([.,!?。、]+)|(\s+)/g; let mm;
+    while((mm=re.exec(t))!==null){
+      if(mm[1]){ out.push(toJP(mm[1])); }              // 단어 토큰 → 재귀 변환
+      else if(mm[2]){ out.push(/[?？]/.test(mm[2])?"？":(/[.。]/.test(mm[2])?"。":"、")); } // 구두점
+      else { out.push(" "); }
+    }
+    return out.join("").replace(/\s+/g," ").trim();
+  }
+  // 데스카로 끝나는 미등록어 → "○○데스" + "か" 안전 분해
+  if(t.length>3 && t.slice(-3)==="데스카"){
+    const stem=t.slice(0,-3)+"데스";
+    if(JP[stem]) return JP[stem]+"か";
+  }
+  // 카로 끝나는 미등록어 → 앞부분 사전 + か
+  if(t.length>1 && t.slice(-1)==="카"){
+    const stem=t.slice(0,-1);
+    if(JP[stem]) return JP[stem]+"か";
+  }
+  // 동사 어미 합성 폴백: 한글 어미를 가나로 치환 (마지막 안전망)
+  const TAIL=[["타이데스","たいです"],["테 구다사이","てください"],["마스카","ますか"],["마시타","ました"],["마센","ません"],["마쇼","ましょう"],["마스","ます"],["타라","たら"],["타이","たい"],["나이","ない"],["요우","よう"],["루?","る？"],["루","る"],["테","て"],["타","た"]];
+  for(const [ko,ja] of TAIL){
+    if(t.length>ko.length && t.slice(-ko.length)===ko){
+      const stem=t.slice(0,-ko.length);
+      if(JP[stem]) return JP[stem]+ja;          // stem이 사전에 있으면 결합
+    }
+  }
+  return t;
+}
+</script>
+<script>
+/* ═══════════ 변신 기계 위젯 ═══════════ */
+function transformStep({tails, intro, btn}){
+  return (root)=>{
+    root.appendChild(elN(`<div class="card fade-up"><div class="eyebrow coral-t">🔁 동사 변신 기계</div>
+      <div class="body">${intro}</div></div>`));
+    const vWrap=elN(`<div class="chips fade-up" style="padding:0 2px;"></div>`);
+    const disp=elN(`<div class="card pop-in" style="text-align:center;">
+      <div class="bigword" id="tw"></div><div class="meanline" id="tm"></div><div class="formula" id="tf"></div></div>`);
+    const tWrap=elN(`<div class="chips fade-up" style="padding:0 2px;"></div>`);
+    let vi=0, ti=0;
+    function draw(){
+      vWrap.innerHTML=""; tWrap.innerHTML="";
+      VERBS.forEach((v,i)=>{ const c=elN(`<button class="chip ${i===vi?"sel":""}">${v.base} ${v.mean}</button>`);
+        c.onclick=()=>{ vi=i; sfx.tap(); draw(); }; vWrap.appendChild(c); });
+      tails.forEach((t,i)=>{ const c=elN(`<button class="chip tailchip ${i===ti?"sel":""}">${t.e} <span style="font-weight:700; color:var(--sub);">${t.tag}</span></button>`);
+        c.onclick=()=>{ ti=i; sfx.coin(); draw(); }; tWrap.appendChild(c); });
+      const v=VERBS[vi], t=tails[ti];
+      const tw=disp.querySelector("#tw");
+      if(t.e==="루") tw.innerHTML=`<span class="stem">${v.base}</span>`;
+      else if(t.e==="루?") tw.innerHTML=`<span class="stem">${v.base}</span><span class="tail">?</span>`;
+      else tw.innerHTML=`<span class="stem">${v.stem}</span><span class="tail">${t.e}</span>`;
+      disp.querySelector("#tm").textContent = `${jpForm(v,t.e)} = ${v.kr[t.e]}`;
+      disp.querySelector("#tf").textContent = `${v.base}(${v.mean}) → ${t.f}`;
+      if(arguments[0]!=="init") speak(jpForm(v,t.e));
+    }
+    draw("init");
+    root.appendChild(vWrap); root.appendChild(disp); root.appendChild(tWrap);
+    root.appendChild(elN(`<div class="caption">🐾 부담 없이 구경만! 외우기는 다음 — <b>한 형태 5문제</b>씩 몸에 새깁니다.</div>`));
+    root.appendChild(btnRow(btn||"다음 ▸","primary",next));
+  };
+}
+/* 범용 표 스텝 */
+function tblStep({eyebrow, rows, cols, caption, btn, tone}){
+  return (root)=>{
+    const card=elN(`<div class="card fade-up"><div class="eyebrow gold-t">${eyebrow}</div>
+      <table class="tbl" style="margin-top:6px;"><tbody></tbody></table></div>`);
+    const tb=card.querySelector("tbody");
+    rows.forEach(r=>{
+      const tr=document.createElement("tr"); tr.className="say";
+      tr.innerHTML=cols.map((c,ci)=>`<td>${r[c]}${ci===0?' <span class="spk">🔊</span>':''}</td>`).join("");
+      tr.onclick=()=>{ sfx.tap(); speak(r[cols[0]]); };
+      tb.appendChild(tr);
+    });
+    root.appendChild(card);
+    if(caption) root.appendChild(elN(`<div class="caption">${caption}</div>`));
+    root.appendChild(btnRow(btn||"다음 ▸", tone||"gold", next));
+  };
+}
+function pairStep({eyebrow, rows, caption, btn, tone}){
+  return (root)=>{
+    const card=elN(`<div class="card fade-up"><div class="eyebrow gold-t">${eyebrow}</div>
+      <table class="tbl" style="margin-top:6px;"><thead><tr><th style="text-align:left; font-size:11px; color:var(--sub);">반말</th><th style="text-align:left; font-size:11px; color:var(--sub);">존댓말 🔊</th><th style="text-align:left; font-size:11px; color:var(--sub);">뜻</th></tr></thead><tbody></tbody></table></div>`);
+    const tb=card.querySelector("tbody");
+    rows.forEach(r=>{
+      const tr=document.createElement("tr");
+      const tdB=document.createElement("td"); tdB.innerHTML=`${r.ban} <span class="spk">🔊</span>`; tdB.style.cursor="pointer";
+      tdB.onclick=()=>{ sfx.tap(); speak(r.ban); };
+      const tdJ=document.createElement("td"); tdJ.innerHTML=`<b>${r.jon}</b> <span class="spk">🔊</span>`; tdJ.style.cursor="pointer";
+      tdJ.onclick=()=>{ sfx.tap(); speak(r.jon); };
+      const tdK=document.createElement("td"); tdK.textContent=r.kr; tdK.style.fontSize="12px";
+      tr.appendChild(tdB); tr.appendChild(tdJ); tr.appendChild(tdK);
+      tb.appendChild(tr);
+    });
+    root.appendChild(card);
+    if(caption) root.appendChild(elN(`<div class="caption">${caption}</div>`));
+    root.appendChild(btnRow(btn||"다음 ▸", tone||"gold", next));
+  };
+}
+/* 특수동사 변신 기계 — mode: "ban" | "jon" */
+function spTransform({mode, intro, btn}){
+  const FORMS = mode==="ban" ? SP_FORMS_BAN : SP_FORMS_JON;
+  const key = mode==="ban" ? "ban" : "jon";
+  return (root)=>{
+    root.appendChild(elN(`<div class="card fade-up"><div class="eyebrow coral-t">🔁 변신 기계 (특수동사 · ${mode==="ban"?"반말":"존댓말"})</div>
+      <div class="body">${intro}</div></div>`));
+    const vWrap=elN(`<div class="chips fade-up" style="padding:0 2px;"></div>`);
+    const disp=elN(`<div class="card pop-in" style="text-align:center;">
+      <div class="bigword" id="tw"></div><div class="meanline" id="tm"></div><div class="formula" id="tf"></div></div>`);
+    const tWrap=elN(`<div class="chips fade-up" style="padding:0 2px;"></div>`);
+    let vi=0, ti=0;
+    function draw(){
+      vWrap.innerHTML=""; tWrap.innerHTML="";
+      VERBS_SP.forEach((v,i)=>{ const c=elN(`<button class="chip ${i===vi?"sel":""}">${v.base} ${v.mean}</button>`);
+        c.onclick=()=>{ vi=i; sfx.tap(); draw(); }; vWrap.appendChild(c); });
+      FORMS.forEach((t,i)=>{ const c=elN(`<button class="chip tailchip ${i===ti?"sel":""}">${t.e} <span style="font-weight:700; color:var(--sub);">${t.tag}</span></button>`);
+        c.onclick=()=>{ ti=i; sfx.coin(); draw(); }; tWrap.appendChild(c); });
+      const v=VERBS_SP[vi], e=FORMS[ti].e; const cell=v[key][e];
+      disp.querySelector("#tw").innerHTML=`<span class="stem">${v.base}</span> → <span class="tail">${cell[0]}</span>`;
+      disp.querySelector("#tm").textContent = `${cell[0]} = ${cell[1]}`;
+      disp.querySelector("#tf").textContent = `${v.base}(${v.mean}) → ${cell[0]}`;
+      if(arguments[0]!=="init") speak(cell[0]);
+    }
+    draw("init");
+    root.appendChild(vWrap); root.appendChild(disp); root.appendChild(tWrap);
+    root.appendChild(elN(`<div class="caption">🐾 본편 동사처럼 칩을 갈아 끼우며 변신을 눈으로 확인! 4개 전부 같은 자리에 같은 꼬리.</div>`));
+    root.appendChild(btnRow(btn||"다음 ▸","primary",next));
+  };
+}
+/* 특수동사 형태 드릴 — 한 형태를 4개 동사로 (기본형 사라지고 꼬리 붙기) */
+function spRounds(mode, e){
+  const key = mode==="ban" ? "ban" : "jon";
+  return VERBS_SP.map((v,i)=>{
+    const cell=v[key][e]; const jp=cell[0];
+    // 조립 조각: 기본형 + (완성형에서 공통 꼬리 추출). 단순화 위해 [기본형, 변신결과] 2조각으로 — 기본형이 사라지며 결과가 남는 연출
+    return {ko:cell[1], parts:[v.base, jp], jp, stem:v.base, tail:jp, fly:true, swap:true,
+            pm:`${v.base} = ${v.mean}`,
+            note:(i===VERBS_SP.length-1)?`📝 4개 전부 ${e==="테 구다사이"||e==="명령"?"테꼴":"꼬리"}은 같아요 — 바뀌는 건 몸통뿐!`:undefined};
+  });
+}
+
+/* 한 형태 10문제 라운드 자동 생성/* 한 형태 10문제 라운드 자동 생성 — 기본형+꼬리 조립, 완성 시 루가 날아간다! */
+function formRounds(e, extras, ex){
+  const seq=[0,1,2,3,4];
+  return seq.map((vi,i)=>{
+    const v=VERBS[vi];
+    const isQ=(e==="루?"), isKud=(e==="테 구다사이");
+    const parts = isQ ? [v.base,"?"] : isKud ? [v.stem+"테","구다사이"] : [v.base, e];
+    const jp = isKud ? v.stem+"테 구다사이" : jpForm(v,e);
+    const last = (i===seq.length-1);
+    return {ko:v.kr[e], parts, jp, stem:v.stem, tail:e, fly:(!isQ&&!isKud),
+            pm: isKud ? `${v.stem}테 = ${v.kr["테"]}` : `${v.base} = ${v.mean}`,
+            extra:(i>=3 && extras)?extras:undefined,
+            note:(last&&ex)?`📝 예문: <b>${ex[0]}</b> = ${ex[1]}`:undefined};
+  });
+}
+
+/* ═══════════ 0장: 한국어 구조부터 ═══════════ */
+CHS.ch0 = { id:"ch0", title:"한국어 구조부터", eyebrow:"0장 · 말의 부품", label:"0장 · 한국어 구조",
+ steps:[
+  lesson({eyebrow:"🧩 왜 한국어부터?", title:"일본어가 빨라지는 비밀", html:`부품은 딱 5개 — <b>이름(명사) · 상태(형용사) · 행동(동사) · 역할표(조사) · 꼬리</b>.<br/>이 5개만 구분하면 일본어가 훨씬 쉽게 보입니다. 외울 건 없어요 — 이미 매일 쓰는 한국어니까!`, btn:"부품 5개 훑기 ▸", tone:"gold"}),
+  lesson({eyebrow:"부품 1·2", title:"명사 = 이름 · 형용사 = 상태", html:`🏷️ <b>명사</b>는 이름 — 라멘, 물, 친구<br/>🌡️ <b>형용사</b>는 상태·느낌 — 맛있다, 비싸다, 대단하다<br/><br/>💡 한국어 형용사는 끝이 "~다"로 닮아 있죠? 일본어 형용사도 끝소리가 닮아 있어요 — 비밀은 3장에서!`}),
+  lesson({eyebrow:"부품 3", title:"동사 = 행동, 몸통 + 꼬리", html:`🏃 <b>동사</b>는 행동 — 먹다, 보다, 자다<br/><br/>잘 보면 "먹<b>다</b> · 먹<b>어?</b> · 먹<b>자</b> · 먹<b>고 싶다</b>" — <b>"먹-" 몸통</b>은 그대로, <b>꼬리</b>만 바뀌죠?<br/>🪄 <b>꼬리</b>가 말투와 뜻을 바꿉니다. 일본어도 완전히 같은 원리예요!`}),
+  lesson({eyebrow:"부품 4", title:"조사 = 말의 역할표", html:`🧷 <b>조사</b>는 역할 표시 — 나<b>는</b>, 라멘<b>을</b>, 친구<b>랑</b><br/><br/>일본어에도 똑같은 작은 말이 있어요. 다음 장에서 <b>딱 6개만</b> 외울 거예요!`, btn:"부품 퀴즈 도전 ▸", tone:"gold"}),
+  mc({tag:"말 부품 1/4", q:"다음 중 <b>명사</b>는?", opts:["라멘","먹다","맛있다","빠르다"], answer:0, why:"라멘은 음식의 <b>이름</b> — 명사!"}),
+  mc({tag:"말 부품 2/4", q:"다음 중 <b>동사</b>는?", opts:["물","먹다","비싸다","학교"], answer:1, why:"먹다는 <b>행동</b> — 동사!"}),
+  mc({tag:"말 부품 3/4", q:"\"라멘<b>을</b>\"에서 \"을\"의 역할은?", opts:["명사","조사","동사","형용사"], answer:1, why:"역할을 알려주는 <b>조사</b>!"}),
+  mc({tag:"말 부품 4/4", q:"\"먹다 · 먹어 · 먹자\"에서 변하지 않는 <b>몸통</b>은?", opts:["먹","다","자","어"], answer:0, why:"몸통 <b>먹-</b>은 그대로, 꼬리만 바뀌죠. 일본어도 똑같아요!"}),
+  doneStep({title:"말 부품 통과!", html:`🏷️ 명사 · 🌡️ 형용사 · 🏃 동사 · 🧷 조사 · 🪄 꼬리<br/><br/>다음은 <b>조사 딱 6개</b> — 정말 6개면 충분해요!`}),
+ ]};
+
+/* ═══════════ 1장: 핵심 조사 6 + 육하원칙 ═══════════ */
+CHS.ch1 = { id:"ch1", title:"핵심 조사 6개", eyebrow:"1장 · 조사", label:"1장 · 핵심 조사",
+ steps:[
+  lesson({eyebrow:"🧷 1장", title:"조사는 주입식으로 — 6개 × 5문제 + 무오답 관문", html:`와(은/는) · 오(을/를) · 데(에서) · 토(랑) · 마데(까지) · 카(질문) — 이 6개가 전부입니다.<br/><br/>외우려 하지 마세요. <b>한 조사씩 5문제 연속</b>으로 손이 먼저 외우게 하고, 마지막에 <b>랜덤 10문제 무오답 관문</b>으로 도장을 찍습니다!<br/><br/>예시 단어는 전부 한국어와 같은 말 — 무료 · 라멘 · 야쿠소쿠(약속) · 카조쿠(가족) · 호테루(호텔) · 메뉴 · 교자, 지명도 그대로 — 소우루(서울) · 토쿄(도쿄) · 니혼(일본) · 푸산(부산)!`, btn:"표 한 번 훑고 시작 ▸", tone:"gold"}),
+  tblStep({eyebrow:"🧷 핵심 조사 6 — 참고표", rows:PARTICLES, cols:["p","kr","ex"],
+    caption:"외우지 말고 눈으로만 훑으세요 — 바로 손으로 익힙니다! (가·니·노·모·카라는 부록에)", btn:"와부터 5문제 ▸"}),
+  pickDrill({p:"와", kr:"은 / 는", decoys:["오","데","토"], items:[
+    {w:"무료", ko:"무료는"},{w:"카조쿠(가족)", ko:"가족은"},{w:"호테루(호텔)", ko:"호텔은"},{w:"소우루(서울)", ko:"서울은"},{w:"라멘", ko:"라멘은"}]}),
+  pickDrill({p:"오", kr:"을 / 를", decoys:["와","데","마데"], items:[
+    {w:"야쿠소쿠(약속)", ko:"약속을"},{w:"라멘", ko:"라멘을"},{w:"메뉴", ko:"메뉴를"},{w:"카조쿠(가족)", ko:"가족을"},{w:"호테루(호텔)", ko:"호텔을"}]}),
+  pickDrill({p:"데", kr:"에서", decoys:["와","마데","토"], items:[
+    {w:"소우루(서울)", ko:"서울에서"},{w:"토쿄(도쿄)", ko:"도쿄에서"},{w:"호테루(호텔)", ko:"호텔에서"},{w:"니혼(일본)", ko:"일본에서"},{w:"푸산(부산)", ko:"부산에서"}]}),
+  pickDrill({p:"토", kr:"랑", decoys:["오","와","데"], items:[
+    {w:"카조쿠(가족)", ko:"가족이랑"},{w:"라멘", ko:"라멘이랑"},{w:"교자", ko:"교자랑"},{w:"호테루(호텔)", ko:"호텔이랑"},{w:"소우루(서울)", ko:"서울이랑"}]}),
+  pickDrill({p:"마데", kr:"까지", decoys:["데","토","카"], items:[
+    {w:"호테루(호텔)", ko:"호텔까지"},{w:"소우루(서울)", ko:"서울까지"},{w:"토쿄(도쿄)", ko:"도쿄까지"},{w:"니혼(일본)", ko:"일본까지"},{w:"푸산(부산)", ko:"부산까지"}]}),
+  pickDrill({p:"카", kr:"질문 표시 (데스 뒤에!)", decoys:["와","오","마데"], items:[
+    {w:"무료데스", ko:"무료입니까?"},{w:"유료데스", ko:"유료입니까?"},{w:"라멘데스", ko:"라멘입니까?"},{w:"호테루데스", ko:"호텔입니까?"},{w:"카조쿠데스", ko:"가족입니까?"}]}),
+  gauntlet({tag:"조사 무오답 관문", n:10, bank:[
+    {q:`<b>야쿠소쿠(약속)</b> + __ = "약속을"`, opts:["오","와","데","토"], a:"오", r:"야쿠소쿠오 = 약속을", akr:"오 = 을/를"},
+    {q:`<b>라멘</b> + __ = "라멘을"`, opts:["오","와","마데","카"], a:"오", r:"라멘오 = 라멘을", akr:"오 = 을/를"},
+    {q:`<b>무료</b> + __ = "무료는"`, opts:["와","오","데","토"], a:"와", r:"무료와 = 무료는", akr:"와 = 은/는"},
+    {q:`<b>카조쿠(가족)</b> + __ = "가족은"`, opts:["와","토","오","마데"], a:"와", r:"카조쿠와 = 가족은", akr:"와 = 은/는"},
+    {q:`<b>소우루(서울)</b> + __ = "서울에서"`, opts:["데","니","마데","와"], a:"데", r:"소우루데 = 서울에서", akr:"데 = 에서"},
+    {q:`<b>토쿄(도쿄)</b> + __ = "도쿄에서"`, opts:["데","마데","토","카"], a:"데", r:"토쿄데 = 도쿄에서", akr:"데 = 에서"},
+    {q:`<b>카조쿠(가족)</b> + __ = "가족이랑"`, opts:["토","와","오","데"], a:"토", r:"카조쿠토 = 가족이랑", akr:"토 = 랑"},
+    {q:`<b>교자</b> + __ = "교자랑"`, opts:["토","오","마데","와"], a:"토", r:"교자토 = 교자랑", akr:"토 = 랑"},
+    {q:`<b>호테루(호텔)</b> + __ = "호텔까지"`, opts:["마데","데","카","토"], a:"마데", r:"호테루마데 = 호텔까지", akr:"마데 = 까지"},
+    {q:`<b>푸산(부산)</b> + __ = "부산까지"`, opts:["마데","데","와","오"], a:"마데", r:"푸산마데 = 부산까지", akr:"마데 = 까지"},
+    {q:`<b>무료데스</b> + __ = "무료입니까?"`, opts:["카","와","오","마데"], a:"카", r:"무료데스카 = 무료입니까?", akr:"카 = 질문 표시"},
+    {q:`<b>호테루데스</b> + __ = "호텔입니까?"`, opts:["카","데","토","와"], a:"카", r:"호테루데스카 = 호텔입니까?", akr:"카 = 질문 표시"}]}),
+  doneStep({title:"역할표 통과!", html:`🧷 <b>와 · 오 · 데 · 토 · 마데 · 카</b> — 30문제 주입 + 무오답 10연속으로 손이 먼저 외웠습니다.<br/><br/>다음은 <b>2장 동사 변신</b>! (질문 만들기 — 육하원칙 — 은 존댓말 데스카를 배운 뒤에, 그래야 한 번에 붙습니다)`}),
+ ]};
+
+/* ═══════════ 2장: 반말 — 형태당 10문제 주입 → 마지막 문장배열 ═══════════ */
+CHS.ch2 = { id:"ch2", title:"동사 변신 — 반말 구조", eyebrow:"2장 · 동사 (반말)", label:"2장 · 반말 구조",
+ steps:[
+  lesson({eyebrow:"🦴 2장", title:"공식 하나, 형태당 5문제", html:`타베루(먹다)에서 <b>루를 빼면 타베</b>. 뒤에 꼬리를 붙이면 뜻이 바뀝니다.<br/><br/>외울 건 <b>공식 하나</b>. 암기 대신 — 한 형태를 <b>5문제 연속</b>으로 손에 새기고, 마지막에만 문장으로 섞습니다!`, btn:"기계로 구경 먼저 ▸", tone:"gold"}),
+  transformStep({tails:TAILS_BAN, intro:`동사와 꼬리를 갈아 끼우며 <b>구경만</b> — 5개 동사 전부 같은 공식!`, btn:"형태 5문제 시작 ▸"}),
+  buildDrill({tag:"의문형 ×5", formula:"❓ 의문형 — 기본형 끝을 올리면 질문! (○○루 + ?)", rounds:formRounds("루?",["테","타"],["라멘오 타베루?","라멘을 먹어?"])}),
+  buildDrill({tag:"권유형 ×5", formula:"🙌 권유형 — 루 빼고 + 요우 = ~하자", rounds:formRounds("요우",["타","나이"],["카조쿠토 미요우","가족이랑 보자"])}),
+  buildDrill({tag:"희망형 ×5", formula:"💭 희망형 — 루 빼고 + 타이 = ~하고 싶다", rounds:formRounds("타이",["타","테"],["라멘오 타베타이","라멘을 먹고 싶다"])}),
+  buildDrill({tag:"과거형 ×5", formula:"⏪ 과거형 — 루 빼고 + 타 = ~했다", rounds:formRounds("타",["타이","테"],["라멘오 타베타","라멘을 먹었다"])}),
+  buildDrill({tag:"가정형 ×5", formula:"🔀 가정형 — 과거에 라만 더! 루 빼고 + 타라 = ~하면", rounds:formRounds("타라",["타","테"],["라멘오 타베타라","라멘을 먹으면"])}),
+  buildDrill({tag:"명령형 ×5", formula:"👉 명령형 — 루 빼고 + 테 = ~해!", rounds:formRounds("테",["타","나이"],["라멘오 타베테","라멘을 먹어!"])}),
+  buildDrill({tag:"부정형 ×5", formula:"🚫 부정형 — 루 빼고 + 나이 = ~지 않는다", rounds:formRounds("나이",["타이","요우"],["라멘오 타베나이","라멘을 먹지 않는다"])}),
+  lesson({eyebrow:"🌶️ 마지막 관문", title:"이제 섞습니다 — 무오답 10문제", html:`형태 7개를 각각 5문제씩, 총 35번 손에 새겼어요.<br/>마지막은 <b>섞어서 10문제</b> — 하나라도 틀리면 처음부터입니다. 꼬리만 보면 풀려요!`, btn:"무오답 관문 입장 ▸", tone:"coral"}),
+  gauntlet({tag:"반말 6형 무오답 관문", n:10, bank:[
+    {q:`"<b>먹자</b>"는?`, opts:["타베요우","타베타","타베테","타베타이"], a:"타베요우", r:"타베요우 = 먹자", akr:"권유 = 요우"},
+    {q:`"<b>봤다</b>"는?`, opts:["미타","미테","미타이","미요우"], a:"미타", r:"미타 = 봤다", akr:"과거 = 타"},
+    {q:`"<b>자고 싶다</b>"는?`, opts:["네타이","네타","네요우","네테"], a:"네타이", r:"네타이 = 자고 싶다", akr:"희망 = 타이"},
+    {q:`"<b>넣어?</b>"는?`, opts:["이레루?","이레테","이레요우","이레타"], a:"이레루?", r:"이레루? = 넣어?", akr:"의문 = 기본형 + ?"},
+    {q:`"<b>보자</b>"는?`, opts:["미요우","미타이","미테","미나이"], a:"미요우", r:"미요우 = 보자", akr:"권유 = 요우"},
+    {q:`"<b>먹었다</b>"는?`, opts:["타베타","타베테","타베타이","타베나이"], a:"타베타", r:"타베타 = 먹었다", akr:"과거 = 타"},
+    {q:`"<b>자!</b>"는?`, opts:["네테","네타","네요우","네루?"], a:"네테", r:"네테 = 자!", akr:"명령 = 테"},
+    {q:`"<b>일어나고 싶다</b>"는?`, opts:["오키타이","오키타","오키테","오키나이"], a:"오키타이", r:"오키타이 = 일어나고 싶다", akr:"희망 = 타이"},
+    {q:`"<b>먹지 않는다</b>"는?`, opts:["타베나이","타베타이","타베테","타베타"], a:"타베나이", r:"타베나이 = 먹지 않는다", akr:"부정 = 나이"},
+    {q:`"<b>먹으면</b>"은?`, opts:["타베타라","타베타","타베테","타베타이"], a:"타베타라", r:"타베타라 = 먹으면", akr:"가정 = 타라 (과거+라)"}]}),
+  doneStep({title:"반말 구조 통과!", html:`🪄 <b>루가 빠지고, 꼬리가 붙는다</b> — 35번의 반복 + 무오답 10연속으로 몸에 새겨졌어요.<br/><br/>? 의문 · 요우 권유 · 타이 희망 · 타 과거 · <b>타라 가정</b> · 테 명령 · 나이 부정<br/><br/>3장 존댓말은 <b>짝만 맞추면</b> 끝!`}),
+ ]};
+</script>
+<script>
+/* ═══════════ 3장: 존댓말 — 공식 1개 → 형태당 10문제 → 짝표 → 문장배열 ═══════════ */
+const PAIRS = [
+  {f:"⭐ 기본",        b:"타베루",   j:"타베마스 = 먹습니다"},
+  {f:"❓ 의문",        b:"타베루?",  j:"타베마스카 = 먹습니까?"},
+  {f:"🙌 권유",        b:"타베요우", j:"타베마쇼 = 먹읍시다"},
+  {f:"💭 희망",        b:"타베타이", j:"타베타이데스 = 먹고 싶습니다"},
+  {f:"⏪ 과거",        b:"타베타",   j:"타베마시타 = 먹었습니다"},
+  {f:"👉 명령→부탁",   b:"타베테!",  j:"타베테 구다사이 = 먹어 주세요"},
+  {f:"🚫 부정",        b:"타베나이", j:"타베마센 = 먹지 않습니다"},
+];
+CHS.ch3 = { id:"ch3", title:"존댓말은 공식처럼", eyebrow:"3장 · 존댓말 공식", label:"3장 · 존댓말 공식",
+ steps:[
+  lesson({eyebrow:"🎀 3장", title:"통일 규칙은 딱 두 줄", html:`📌 <b>데스 = ~입니다</b> (이름·상태)<br/>📌 <b>마스 = ~습니다</b> (행동)<br/><br/>이번에도 암기 대신 — 한 공식을 <b>연속 반복</b>으로 손에 새기고, 마지막에만 문장으로 섞습니다!`, btn:"데스부터 ▸", tone:"gold"}),
+  lesson({eyebrow:"공식 ①", title:"명사 + 데스 = ~입니다", html:`라멘<b>데스</b> = 라멘입니다<br/>카도<b>데스</b> = 카드입니다<br/><br/>이름 뒤에 데스 — 끝! 바로 손에 새깁니다.`}),
+  buildDrill({tag:"명사+데스 ×5", formula:"📌 명사 + 데스 = ~입니다",
+    rounds:[
+      {ko:"라멘입니다", parts:["라멘","데스"], jp:"라멘데스", pm:"라멘 = 라멘"},
+      {ko:"물입니다", parts:["미즈","데스"], jp:"미즈데스", pm:"미즈 = 물"},
+      {ko:"여기입니다", parts:["코코","데스"], jp:"코코데스", pm:"코코 = 여기"},
+      {ko:"카드입니다", parts:["카도","데스"], jp:"카도데스", pm:"카도 = 카드"},
+      {ko:"메뉴입니다", parts:["메뉴","데스"], jp:"메뉴데스", pm:"메뉴 = 메뉴", note:"📝 예문: <b>코레와 메뉴데스</b> = 이것은 메뉴입니다"},
+    ]}),
+  lesson({eyebrow:"공식 ② 준비", title:`일본어 형용사는 대부분 "이"로 끝납니다`, html:`끝의 "이"만 들려도 "아, 상태말!" 하고 알아챌 수 있어요.<br/><br/>오이시<b style="color:var(--coral);">이</b> = 맛있다<br/>스고<b style="color:var(--coral);">이</b> = 대단하다<br/>타카<b style="color:var(--coral);">이</b> = 비싸다<br/>야스<b style="color:var(--coral);">이</b> = 싸다<br/>카와이<b style="color:var(--coral);">이</b> = 귀엽다<br/><br/>📌 <b>끝이 "이"면 십중팔구 상태말!</b>`}),
+  buildDrill({tag:"형용사+데스 ×5", formula:"📌 형용사 + 데스 = ~습니다 (마스는 미끼 — 행동 전용!)",
+    rounds:[
+      {ko:"맛있습니다", parts:["오이시이","데스"], jp:"오이시이데스", pm:"오이시이 = 맛있다"},
+      {ko:"대단합니다", parts:["스고이","데스"], jp:"스고이데스", pm:"스고이 = 대단하다"},
+      {ko:"비쌉니다", parts:["타카이","데스"], jp:"타카이데스", pm:"타카이 = 비싸다"},
+      {ko:"쌉니다", parts:["야스이","데스"], jp:"야스이데스", pm:"야스이 = 싸다", extra:["마스"]},
+      {ko:"귀엽습니다", parts:["카와이이","데스"], jp:"카와이이데스", pm:"카와이이 = 귀엽다", extra:["마스"], note:"📝 예문: <b>스고이데스!</b> = 대단합니다! (감탄은 이 한마디면 끝)"},
+    ]}),
+  lesson({eyebrow:"✨ 데스 마법", title:"명사와 형용사에는 데스만 붙이면 말이 다 됩니다", html:`🍜 라멘데스 (주문 끝!) · 😋 오이시이데스 (감상 끝!) · 🤩 스고이데스 (감탄 끝!)<br/><br/>📌 말이 막히면 일단 <b>단어 + 데스</b> — 그것만으로 대화가 됩니다.`, btn:"동사 존댓말로 ▸", tone:"coral"}),
+  transformStep({tails:TAILS_JON, intro:`동사 존댓말도 <b>구경 먼저</b>! 루를 빼고 꼬리만 — 전부 같은 공식이에요.`, btn:"형태 5문제 시작 ▸"}),
+  buildDrill({tag:"기본형 ×5", formula:"⭐ 기본 — 루 빼고 + 마스 = ~습니다", rounds:formRounds("마스",["마스카","마쇼"],["라멘오 타베마스","라멘을 먹습니다"])}),
+  buildDrill({tag:"의문형 ×5", formula:"❓ 의문 — 루 빼고 + 마스카 = ~합니까?", rounds:formRounds("마스카",["마스"],["라멘오 타베마스카","라멘을 먹습니까?"])}),
+  buildDrill({tag:"권유형 ×5", formula:"🙌 권유 — 루 빼고 + 마쇼 = ~합시다", rounds:formRounds("마쇼",["마스","마시타"],["카조쿠토 타베마쇼","가족이랑 먹읍시다"])}),
+  buildDrill({tag:"희망형 ×5", formula:"💭 희망 — 루 빼고 + 타이데스 = ~하고 싶습니다 (마음은 데스!)", rounds:formRounds("타이데스",["타이","마스"],["라멘오 타베타이데스","라멘을 먹고 싶습니다"])}),
+  buildDrill({tag:"과거형 ×5", formula:"⏪ 과거 — 루 빼고 + 마시타 = ~했습니다", rounds:formRounds("마시타",["마스","마센"],["라멘오 타베마시타","라멘을 먹었습니다"])}),
+  buildDrill({tag:"부탁형 ×5", formula:"👉 명령형이 부탁형으로 — 테(~해!) + 구다사이(주세요)", rounds:formRounds("테 구다사이",["마쇼"],["라멘오 타베테 구다사이","라멘을 먹어 주세요"])}),
+  buildDrill({tag:"부정형 ×5", formula:"🚫 부정 — 루 빼고 + 마센 = ~하지 않습니다", rounds:formRounds("마센",["나이","마스"],["라멘오 타베마센","라멘을 먹지 않습니다"])}),
+  tblStep({eyebrow:"🪞 반말 ↔ 존댓말 짝표 (한눈에)", rows:PAIRS, cols:["f","b","j"],
+    caption:"형태당 5문제씩 손에 새긴 7개를 한 표로 — <b>명령→부탁(테 구다사이)</b> 변신까지!", btn:"마지막 — 무오답 10문제 ▸", tone:"coral"}),
+  gauntlet({tag:"존댓말 7형 무오답 관문", n:10, bank:[
+    {q:`"<b>먹습니다</b>"는?`, opts:["타베마스","타베마스카","타베마쇼","타베마시타"], a:"타베마스", r:"타베마스 = 먹습니다", akr:"기본 = 마스"},
+    {q:`"<b>봅니까?</b>"는?`, opts:["미마스카","미마스","미마쇼","미마센"], a:"미마스카", r:"미마스카 = 봅니까?", akr:"의문 = 마스카"},
+    {q:`"<b>먹읍시다</b>"는?`, opts:["타베마쇼","타베마스","타베마시타","타베마센"], a:"타베마쇼", r:"타베마쇼 = 먹읍시다", akr:"권유 = 마쇼"},
+    {q:`"<b>보고 싶습니다</b>"는?`, opts:["미타이데스","미타이","미마스","미마쇼"], a:"미타이데스", r:"미타이데스 = 보고 싶습니다", akr:"희망 = 타이데스 (마음은 데스!)"},
+    {q:`"<b>먹었습니다</b>"는?`, opts:["타베마시타","타베마스","타베마센","타베타"], a:"타베마시타", r:"타베마시타 = 먹었습니다", akr:"과거 = 마시타"},
+    {q:`"<b>봐 주세요</b>"는?`, opts:["미테 구다사이","미테","미마쇼","미나이"], a:"미테 구다사이", r:"미테 구다사이 = 봐 주세요", akr:"부탁 = 테 + 구다사이"},
+    {q:`"<b>먹지 않습니다</b>"는?`, opts:["타베마센","타베나이","타베마시타","타베마스"], a:"타베마센", r:"타베마센 = 먹지 않습니다", akr:"부정 = 마센"},
+    {q:`"<b>잡니다</b>"는?`, opts:["네마스","네마스카","네마쇼","네마시타"], a:"네마스", r:"네마스 = 잡니다", akr:"기본 = 마스"},
+    {q:`"<b>먹고 싶습니다</b>"는?`, opts:["타베타이데스","타베타이","타베마스","타베마스카"], a:"타베타이데스", r:"타베타이데스 = 먹고 싶습니다", akr:"희망 = 타이데스"},
+    {q:`"<b>봤습니다</b>"는?`, opts:["미마시타","미마스","미타","미마센"], a:"미마시타", r:"미마시타 = 봤습니다", akr:"과거 = 마시타"}]}),
+  doneStep({title:"존댓말 공식 통과!", html:`⭐ 마스 · ❓ 마스카 · 🙌 마쇼 · 💭 타이데스 · ⏪ 마시타 · 👉 테 구다사이 · 🚫 마센<br/><br/>형태당 5문제 + 무오답 10연속 — 어느새 전부 손에!<br/><br/>다음은 <b>이음말</b> — 말과 말을 잇는 풀! 그리고 곧 <b>데스카 + 육하원칙</b> 질문 공장이 열립니다!`}),
+ ]};
+
+/* ═══════════ 육하원칙: 데스카를 배웠으니 이제 질문! ═══════════ */
+CHS.chq = { id:"chq", title:"육하원칙 — 질문 부품", eyebrow:"5장 · 육하원칙", label:"5장 · 육하원칙",
+ steps:[
+  lesson({eyebrow:"❓ 5장", title:"육하원칙 6개 — 외울 건 이게 끝", html:`⏰ <b>이츠</b> = 언제 (when)<br/>📍 <b>도코</b> = 어디 (where)<br/>🧑 <b>다레</b> = 누구 (who)<br/>🍜 <b>나니</b> = 무엇 (what)<br/>🛠️ <b>도우</b> = 어떻게 (how)<br/>❓ <b>도우시테</b> = 왜 (why)<br/><br/>그리고 앞서 배운 <b>데스카(~입니까?)</b> — 이 둘만 붙이면 질문이 완성됩니다!`, btn:"표로 한 번 더 ▸", tone:"coral"}),
+  tblStep({eyebrow:"❓ 육하원칙 표", rows:QWORDS, cols:["q","kr","ex"],
+    caption:"3장에서 배운 <b>데스카</b>와 합체한 모습이에요 — 새 공식이 아닙니다!", btn:"합체 드릴 시작 ▸", tone:"coral"}),
+  buildDrill({tag:"육하원칙+데스카 ×6", formula:"❓ 육하원칙 + 데스카 = ~입니까? (마스카는 미끼 — 동사 전용!)",
+    rounds:[
+      {ko:"언제입니까?", parts:["이츠","데스카"], jp:"이츠데스카", pm:"이츠 = 언제 (when)"},
+      {ko:"어디입니까?", parts:["도코","데스카"], jp:"도코데스카", pm:"도코 = 어디 (where)"},
+      {ko:"누구입니까?", parts:["다레","데스카"], jp:"다레데스카", pm:"다레 = 누구 (who)"},
+      {ko:"무엇입니까?", parts:["나니","데스카"], jp:"나니데스카", pm:"나니 = 무엇 (what)"},
+      {ko:"어떻습니까?", parts:["도우","데스카"], jp:"도우데스카", pm:"도우 = 어떻게 (how)", extra:["마스카"]},
+      {ko:"왜입니까?", parts:["도우시테","데스카"], jp:"도우시테데스카", pm:"도우시테 = 왜 (why)", extra:["마스카"]},
+    ]}),
+  lesson({eyebrow:"🔗 합체 2탄", title:"육하원칙 + 조사(1장) = 질문 부품", html:`나니(무엇) + 오(을) = <b>나니오</b> = 무엇을<br/>다레(누구) + 토(랑) = <b>다레토</b> = 누구랑<br/><br/>1장에서 배운 조사가 다시 등장 — 아는 부품 둘을 <b>붙이기만</b>!`}),
+  tblStep({eyebrow:"🔗 결합표 4개", rows:QCOMBO, cols:["jp","kr","mk"],
+    caption:"부품 + 부품. 끝!", btn:"무오답 관문 10문제 ▸", tone:"coral"}),
+  gauntlet({tag:"육하원칙 무오답 관문", n:10, bank:[
+    {q:`"<b>어디</b>입니까?" (where)는?`, opts:["도코데스카","나니데스카","다레데스카","이츠데스카"], a:"도코데스카", r:"도코데스카 = 어디입니까?", akr:"도코 = 어디 (where)"},
+    {q:`"<b>언제</b>입니까?" (when)는?`, opts:["이츠데스카","도코데스카","도우데스카","도우시테데스카"], a:"이츠데스카", r:"이츠데스카 = 언제입니까?", akr:"이츠 = 언제 (when)"},
+    {q:`"<b>누구</b>입니까?" (who)는?`, opts:["다레데스카","나니데스카","도코데스카","이츠데스카"], a:"다레데스카", r:"다레데스카 = 누구입니까?", akr:"다레 = 누구 (who)"},
+    {q:`"<b>무엇</b>입니까?" (what)는?`, opts:["나니데스카","도우시테데스카","도우데스카","다레데스카"], a:"나니데스카", r:"나니데스카 = 무엇입니까?", akr:"나니 = 무엇 (what)"},
+    {q:`"<b>어떻습니까?</b>" (how)는?`, opts:["도우데스카","도우마스카","도코데스카","나니데스카"], a:"도우데스카", r:"도우데스카 = 어떻습니까?", akr:"도우 = 어떻게 (how) · 마스카는 동사 전용!"},
+    {q:`"<b>왜</b>입니까?" (why)는?`, opts:["도우시테데스카","나니데스카","이츠데스카","다레데스카"], a:"도우시테데스카", r:"도우시테데스카 = 왜입니까?", akr:"도우시테 = 왜 (why)"},
+    {q:`"<b>무엇을</b>"은? (육하+조사)`, opts:["나니오","나니와","나니토","나니데"], a:"나니오", r:"나니오 = 무엇을", akr:"나니(무엇) + 오(을)"},
+    {q:`"<b>누구랑</b>"은?`, opts:["다레토","다레가","다레오","다레마데"], a:"다레토", r:"다레토 = 누구랑", akr:"다레(누구) + 토(랑)"},
+    {q:`"<b>언제까지</b>"는?`, opts:["이츠마데","이츠데","이츠토","이츠오"], a:"이츠마데", r:"이츠마데 = 언제까지", akr:"이츠(언제) + 마데(까지)"},
+    {q:`"<b>어디서</b>"는?`, opts:["도코데","도코와","도코마데","도코오"], a:"도코데", r:"도코데 = 어디서", akr:"도코(어디) + 데(에서)"},
+    {q:`"<b>무료입니까?</b>"는? (육하원칙이 필요 없을 때!)`, opts:["무료데스카","나니데스카","도코데스카","무료마스카"], a:"무료데스카", r:"무료데스카 = 무료입니까?", akr:"그냥 단어 + 데스카!"},
+    {q:`실전! "<b>호텔은 어디입니까?</b>"는?`, opts:["호테루와 도코데스카","호테루와 나니데스카","도코와 호테루데스카","호테루데 도코데스카"], a:"호테루와 도코데스카", r:"호테루와 도코데스카 = 호텔은 어디입니까?", akr:"호테루와(은) + 도코(where) + 데스카"}]}),
+  doneStep({title:"질문 부품 통과!", html:`❓ 이츠·도코·다레·나니·도우·도우시테 (when~why)<br/>🔗 + 데스카 = 질문 완성 · + 조사 = 나니오 · 다레토 — 무오답 10연속까지!<br/><br/>다음은 <b>6장 중간 종합 관문</b> — 1~5장 전부, 랜덤 20문제 무오답!`}),
+ ]};
+
+/* ═══════════ 6장: 중간 종합 관문 — 1~5장 총정리 ═══════════ */
+CHS.chmid = { id:"chmid", title:"중간 종합 관문", eyebrow:"6장 · 중간 종합", label:"6장 · 중간 종합",
+ steps:[
+  lesson({eyebrow:"🏔️ 6장", title:"1~5장 총정리 — 랜덤 20문제", html:`조사 · 반말 6형 · 존댓말 7형 · 데스 · 이음말 · 육하원칙 — 지금까지의 전부가 섞여 나옵니다.<br/><br/>규칙은 하나: <b>하나라도 틀리면 처음부터.</b><br/>20연속이면, 당신의 일본어 뼈대는 완성입니다!`, btn:"관문 입장 ▸", tone:"gold"}),
+  gauntlet({tag:"1~5장 종합 무오답 관문", n:20, bank:[
+    {q:`<b>카조쿠(가족)</b> + __ = "가족이랑"`, opts:["토","와","오","마데"], a:"토", r:"카조쿠토 = 가족이랑", akr:"토 = 랑 (1장)"},
+    {q:`<b>무료</b> + __ = "무료는"`, opts:["와","오","데","카"], a:"와", r:"무료와 = 무료는", akr:"와 = 은/는 (1장)"},
+    {q:`<b>소우루(서울)</b> + __ = "서울에서"`, opts:["데","마데","와","토"], a:"데", r:"소우루데 = 서울에서", akr:"데 = 에서 (1장)"},
+    {q:`<b>호테루(호텔)</b> + __ = "호텔까지"`, opts:["마데","데","오","카"], a:"마데", r:"호테루마데 = 호텔까지", akr:"마데 = 까지 (1장)"},
+    {q:`"<b>먹자</b>"는? (반말)`, opts:["타베요우","타베타","타베테","타베타이"], a:"타베요우", r:"타베요우 = 먹자", akr:"권유 = 요우 (2장)"},
+    {q:`"<b>봤다</b>"는? (반말)`, opts:["미타","미테","미타이","미요우"], a:"미타", r:"미타 = 봤다", akr:"과거 = 타 (2장)"},
+    {q:`"<b>자고 싶다</b>"는? (반말)`, opts:["네타이","네타","네요우","네테"], a:"네타이", r:"네타이 = 자고 싶다", akr:"희망 = 타이 (2장)"},
+    {q:`"<b>먹습니다</b>"는?`, opts:["타베마스","타베마스카","타베마쇼","타베마시타"], a:"타베마스", r:"타베마스 = 먹습니다", akr:"기본 = 마스 (3장)"},
+    {q:`"<b>봅니까?</b>"는?`, opts:["미마스카","미마스","미마쇼","미마센"], a:"미마스카", r:"미마스카 = 봅니까?", akr:"의문 = 마스카 (3장)"},
+    {q:`"<b>먹어 주세요</b>"는?`, opts:["타베테 구다사이","타베테","타베마쇼","타베나이"], a:"타베테 구다사이", r:"타베테 구다사이 = 먹어 주세요", akr:"부탁 = 테 + 구다사이 (3장)"},
+    {q:`"<b>먹고 싶습니다</b>"는?`, opts:["타베타이데스","타베타이","타베마스","타베마쇼"], a:"타베타이데스", r:"타베타이데스 = 먹고 싶습니다", akr:"희망 = 타이데스 (3장)"},
+    {q:`"<b>대단합니다</b>"는?`, opts:["스고이데스","스고이마스","스고이카","스고데스"], a:"스고이데스", r:"스고이데스 = 대단합니다", akr:"형용사 + 데스 (3장)"},
+    {q:`"<b>카드입니다</b>"는?`, opts:["카도데스","카도마스","카도데스카","카도"], a:"카도데스", r:"카도데스 = 카드입니다", akr:"명사 + 데스 (3장)"},
+    {q:`타카이데스. <b>___</b> 오이시이데스<br/>"비쌉니다. <b>하지만</b> 맛있습니다"`, opts:["데모","소시테","소레데","다카라"], a:"데모", r:"타카이데스. 데모 오이시이데스", akr:"데모 = 하지만 (4장)"},
+    {q:`라멘데스. <b>___</b> 미즈데스<br/>"라멘입니다. <b>그리고</b> 물입니다"`, opts:["소시테","데모","다카라","소레데"], a:"소시테", r:"라멘데스. 소시테 미즈데스", akr:"소시테 = 그리고 (4장)"},
+    {q:`야스이데스. <b>___</b> 코코데스<br/>"쌉니다. <b>그래서</b> 여기입니다"`, opts:["소레데","다카라","소시테","데모"], a:"소레데", r:"야스이데스. 소레데 코코데스", akr:"소레데 = 그래서 (4장)"},
+    {q:`야스이데스. <b>___</b> 스고이데스<br/>"쌉니다. <b>그러니까</b> 대단합니다!"`, opts:["다카라","소레데","데모","소시테"], a:"다카라", r:"야스이데스. 다카라 스고이데스", akr:"다카라 = 그러니까 (4장)"},
+    {q:`"<b>어디</b>입니까?" (where)는?`, opts:["도코데스카","나니데스카","다레데스카","이츠데스카"], a:"도코데스카", r:"도코데스카 = 어디입니까?", akr:"도코 = where (5장)"},
+    {q:`"<b>무엇</b>입니까?" (what)는?`, opts:["나니데스카","도우시테데스카","도우데스카","다레데스카"], a:"나니데스카", r:"나니데스카 = 무엇입니까?", akr:"나니 = what (5장)"},
+    {q:`"<b>왜</b>입니까?" (why)는?`, opts:["도우시테데스카","나니데스카","이츠데스카","도코데스카"], a:"도우시테데스카", r:"도우시테데스카 = 왜입니까?", akr:"도우시테 = why (5장)"},
+    {q:`"<b>무엇을</b>"은?`, opts:["나니오","나니와","나니토","나니데"], a:"나니오", r:"나니오 = 무엇을", akr:"나니 + 오 (5장)"},
+    {q:`"<b>언제까지</b>"는?`, opts:["이츠마데","이츠데","이츠토","이츠오"], a:"이츠마데", r:"이츠마데 = 언제까지", akr:"이츠 + 마데 (5장)"},
+    {q:`실전! "<b>호텔은 어디입니까?</b>"는?`, opts:["호테루와 도코데스카","호테루와 나니데스카","도코와 호테루데스카","호테루데 도코데스카"], a:"호테루와 도코데스카", r:"호테루와 도코데스카 = 호텔은 어디입니까?", akr:"와 + 도코 + 데스카 (1·5장 합체!)"}]}),
+  doneStep({title:"중간 종합 관문 돌파!", html:`조사 · 반말 · 존댓말 · 데스 · 이음말 · 육하원칙 — <b>20연속 무오답</b>으로 뼈대 완성!<br/><br/>이제 <b>7장 식당 생존 문장</b> — 단어 9개만 더하면 실전입니다!`}),
+ ]};
+
+/* ═══════════ 7장: 식당 생존 — 통째 인사말 + 상황 관문 ═══════════ */
+const GREET7 = [
+  {jp:"이타다키마스", kr:"잘 먹겠습니다 (식사 시작!)"},
+  {jp:"고치소사마데시타", kr:"잘 먹었습니다 (식사 끝!)"},
+  {jp:"아리가토 고자이마스", kr:"감사합니다"},
+  {jp:"오네가이시마스", kr:"부탁합니다 (단어 뒤에 붙이면 만능 주문)"},
+  {jp:"스미마셍", kr:"저기요 / 실례합니다 (직원 부를 때)"},
+  {jp:"이랏샤이마세", kr:"어서 오세요 (점원이 하는 인사 — 듣고 알아채기!)"},
+];
+CHS.ch4 = { id:"ch4", title:"식당 생존 — 통째 + 상황", eyebrow:"7장 · 생존", label:"7장 · 식당 생존",
+ steps:[
+  lesson({eyebrow:"🍜 7장", title:"공식으로 못 만드는 말은 통째로!", html:`지금까지는 전부 <b>공식</b>이었죠. 그런데 식당의 시작과 끝을 책임지는 인사말 몇 개는 공식이 없어요 — <b>그냥 통째로</b> 외우면 됩니다.<br/><br/>딱 6개만 외우고, 바로 <b>상황 10문제 관문</b>으로 갑니다. 보기는 쉽지만 — 그 안에 조사·동사·이음말·육하원칙이 숨어 있어요!`, btn:"통째 인사 6개 ▸", tone:"gold"}),
+  tblStep({eyebrow:"🙏 통째로 외우는 인사 6개", rows:GREET7, cols:["jp","kr"],
+    caption:"💡 짝으로 외워요 — 시작은 <b>이타다키마스</b>, 끝은 <b>고치소사마데시타</b>! 입으로 세 번씩 따라 읽고 입장.", btn:"보너스 단어 4개 ▸"}),
+  lesson({eyebrow:"📖 보너스 단어 4개", title:"상황 문제에 나올 단어만 살짝", html:`🚻 <b>토이레</b> = 화장실<br/>💴 <b>이쿠라</b> = 얼마<br/>⭐ <b>오스스메</b> = 추천<br/>💧 <b>오미즈</b> = 물<br/><br/>이게 전부! 나머지는 이미 다 배운 것들입니다.`, btn:"상황 관문 입장 ▸", tone:"coral"}),
+  gauntlet({tag:"식당 상황 무오답 관문", n:10, bank:[
+    {q:`🚪 식당 문을 여니 점원이 외칩니다 — "<b>이랏샤이마세~!</b>" 무슨 뜻일까요?`, opts:["어서 오세요","잘 먹었습니다","감사합니다","실례합니다"], a:"어서 오세요", r:"이랏샤이마세 = 어서 오세요 (점원의 인사)", akr:"듣고 알아채면 끝 — 대답은 필요 없어요!"},
+    {q:`🍜 라멘이 나왔습니다. 두 손 모으고 식사 시작 인사 — 뭐라고 할까요?`, opts:["이타다키마스","고치소사마데시타","오네가이시마스","이랏샤이마세"], a:"이타다키마스", r:"이타다키마스 = 잘 먹겠습니다", akr:"시작 = 이타다키마스 · 끝 = 고치소사마데시타!"},
+    {q:`🙋 직원을 부르고 싶어요 — 뭐라고 할까요?`, opts:["스미마셍","아리가토 고자이마스","소레데","도우시테"], a:"스미마셍", r:"스미마셍 = 저기요!", akr:"소레데(그래서)·도우시테(왜)는 이음말·육하원칙 — 부르는 말이 아니죠!"},
+    {q:`👉 메뉴를 손가락으로 가리키며 "<b>이것 부탁합니다</b>" — 뭐라고 할까요?`, opts:["코레 오네가이시마스","코레와 오네가이시마스","코레토 오네가이시마스","코레데스카"], a:"코레 오네가이시마스", r:"코레 오네가이시마스 = 이것 부탁합니다", akr:"단어 + 오네가이시마스 — 조사 없이 바로! (와=은/는, 토=랑은 여기 안 어울려요)"},
+    {q:`⭐ 추천 메뉴가 궁금해요 — "<b>추천은 무엇입니까?</b>"`, opts:["오스스메와 나니데스카","오스스메와 도코데스카","오스스메토 나니데스카","오스스메 이타다키마스"], a:"오스스메와 나니데스카", r:"오스스메와 나니데스카 = 추천은 무엇입니까?", akr:"와(은) + 나니(what·5장)! 도코는 '어디', 토는 '랑'"},
+    {q:`🚻 화장실(토이레)을 찾아요 — "<b>화장실은 어디입니까?</b>"`, opts:["토이레와 도코데스카","토이레와 다레데스카","토이레마데 도코데스카","토이레 구다사이"], a:"토이레와 도코데스카", r:"토이레와 도코데스카 = 화장실은 어디입니까?", akr:"도코 = 어디 (where)! 다레는 '누구', 마데는 '까지'"},
+    {q:`😋 한입 먹고 감탄 — "<b>쌉니다. 그리고 맛있습니다!</b>"`, opts:["야스이데스. 소시테 오이시이데스","야스이데스. 데모 오이시이데스","야스이데스. 다카라 오이시이데스","야스이마스. 소시테 오이시이데스"], a:"야스이데스. 소시테 오이시이데스", r:"야스이데스. 소시테 오이시이데스 = 쌉니다. 그리고 맛있습니다", akr:"그리고 = 소시테(4장)! 그리고 형용사엔 데스 — 마스 아님!"},
+    {q:`😊 옆자리 일본인과 친해졌어요 — "<b>같이 먹읍시다!</b>" (잇쇼니 = 같이)`, opts:["잇쇼니 타베마쇼","잇쇼니 타베마스카","잇쇼니 타베테","잇쇼니 타베타이"], a:"잇쇼니 타베마쇼", r:"잇쇼니 타베마쇼 = 같이 먹읍시다", akr:"권유 = 마쇼(3장)! 마스카는 질문, 타베테는 반말 명령"},
+    {q:`💴 가격이 궁금해요 — "<b>얼마입니까?</b>" (이쿠라 = 얼마)`, opts:["이쿠라데스카","이쿠라마스카","나니데스카","이쿠라 오네가이시마스"], a:"이쿠라데스카", r:"이쿠라데스카 = 얼마입니까?", akr:"단어 + 데스카! 마스카는 동사 전용(3장)"},
+    {q:`💧 물을 부탁하고 싶어요 — "<b>물 부탁합니다</b>"`, opts:["오미즈 오네가이시마스","오미즈와 오네가이시마스","오미즈데 오네가이시마스","오미즈 데스카"], a:"오미즈 오네가이시마스", r:"오미즈 오네가이시마스 = 물 부탁합니다", akr:"부탁은 조사 없이 단어 + 오네가이시마스!"},
+    {q:`🙇 직원이 친절하게 도와줬어요 — 감사 인사는?`, opts:["아리가토 고자이마스","이타다키마스","이랏샤이마세","소레데"], a:"아리가토 고자이마스", r:"아리가토 고자이마스 = 감사합니다", akr:"만능 감사 인사 — 통째로!"},
+    {q:`👋 다 먹고 나가면서 식사 마무리 인사 — 뭐라고 할까요?`, opts:["고치소사마데시타","이타다키마스","스미마셍","오네가이시마스"], a:"고치소사마데시타", r:"고치소사마데시타 = 잘 먹었습니다", akr:"시작 = 이타다키마스 ↔ 끝 = 고치소사마데시타!"}]}),
+  doneStep({title:"식당 생존 통과!", html:`🙏 통째 인사 6개 + 상황 <b>10연속 무오답</b> — 입장부터 퇴장까지 흐름이 잡혔어요.<br/><br/>이제 진짜 무대, <b>식당 시뮬레이션</b>으로!`}),
+ ]};
+</script>
+<script>
+/* ═══════════ 뜻 사전 ═══════════ */
+const MEAN = {};
+PHRASES.forEach(g=>g.list.forEach(r=>{ MEAN[r[0]]=r[1]; }));
+GREET7.forEach(r=>{ MEAN[r.jp]=r.kr.split(" (")[0]; });
+Object.assign(MEAN, {
+  "라멘데스":"라멘입니다","타베마쇼":"먹읍시다","라멘오 타베마스":"라멘을 먹습니다","타베마스":"먹습니다",
+  "오스스메":"추천","카이케이":"계산","잇쇼니 타베마스":"같이 먹습니다","코레데스":"이것입니다",
+  "비루데스":"맥주입니다","비루데스카":"맥주입니까?","비루오 타베마스":"맥주를 먹습니다(?)",
+  "타베테 구다사이":"먹어 주세요","코코데스":"여기입니다","카도데스":"카드입니다","카도오 타베마스":"카드를 먹습니다(?)",
+  "모우 잇카이 오네가이시마스":"한 번 더 부탁합니다","캉코쿠진데스":"한국 사람입니다","캉코쿠카라 키마시타":"한국에서 왔습니다",
+  "타노시이데스":"재미있습니다","타노시캇타데스":"즐거웠습니다","비루오 노미타이데스":"맥주를 마시고 싶습니다",
+  "잇쇼니 노미마쇼":"같이 마십시다","노미마쇼":"마십시다",
+});
+
+/* ═══════════ 식당 시뮬레이션 ═══════════ */
+function simQ(stg, idx){
+  const it = stg.items[idx];
+  return (root)=>{
+    root.appendChild(elN(`<div class="simhead fade-up"><span>${stg.icon} ${stg.title}</span><span>문제 ${idx+1} / ${stg.items.length}</span></div>`));
+    root.appendChild(elN(`<div class="card fade-up"><div class="eyebrow gold-t">📍 상황</div><div class="body">${it.situ}</div></div>`));
+    root.appendChild(elN(`<div class="dialog fade-up"><div class="portrait">${it.icon}</div>
+      <div class="bubble"><div class="who">${it.who}</div><div class="txt">${it.line}</div></div></div>`));
+    const wrap=elN(`<div class="btnrow fade-up"></div>`); const fb=elN(`<div></div>`);
+    [...it.choices].sort(()=>Math.random()-.5).forEach(c=>{
+      const b=document.createElement("button"); b.className="opt"; b.textContent=c; b._right=(c===it.a);
+      b.onclick=()=>{
+        [...wrap.children].forEach(x=>x.style.pointerEvents="none");
+        if(b._right){
+          b.classList.add("right"); sfx.good(); speak(it.a);
+          fb.innerHTML=`<div class="feedback good">⭕ 좋아요! ${it.why}${it.tip?`<br/><span style="font-size:11.5px;">💡 ${it.tip}</span>`:""}</div>
+            <div class="btnrow" style="margin-top:10px;"><button class="btn primary">다음 ▸</button></div>`;
+        }else{
+          S.miss++; b.classList.add("wrong","shake"); sfx.bad();
+          [...wrap.children].find(x=>x._right).classList.add("right");
+          fb.innerHTML=`<div class="feedback bad">🙅 아쉬워요! <b>${c}</b>(은)는 "${MEAN[c]||"다른 뜻"}"이에요.<br/>정답은 <b>${it.a}</b> — ${it.why}${it.tip?`<br/><span style="font-size:11.5px;">💡 ${it.tip}</span>`:""}<br/><span style="font-size:11px;">한 번 더 입으로 읽고 넘어가요. (이번 스테이지 실수 ${S.miss}개 — 1개까지 통과!)</span></div>
+            <div class="btnrow" style="margin-top:10px;"><button class="btn primary">숙지했어요, 다음 ▸</button></div>`;
+        }
+        $("#chlabeltxt").textContent=$("#chlabeltxt").textContent.replace(/( · 실수 \d+)?$/, S.miss?` · 실수 ${S.miss}`:"");
+        fb.querySelector(".btn").onclick=()=>{ sfx.tap(); next(); };
+      };
+      wrap.appendChild(b);
+    });
+    root.appendChild(wrap); root.appendChild(fb);
+  };
+}
+function openSimHub(){
+  S.mode="simhub"; S.ch=null;
+  setHead("8장 · 식당 시뮬레이션","식당 시뮬레이션"); chrome("simhub");
+  stage.innerHTML="";
+  stage.appendChild(elN(`<div class="card fade-up"><div class="eyebrow gold-t">🎮 4개의 스테이지</div>
+    <div class="body">각 스테이지는 <b>단어 미리 챙기기 → 실전 5문제</b> 순서예요. 4개를 모두 통과하면 8장 완료!</div></div>`));
+  STAGES.forEach((st,si)=>{
+    const row=elN(`<div class="course fade-up"><div class="ic">${st.icon}</div>
+      <div style="flex:1;"><div class="t">스테이지 ${si+1} · ${st.title}</div><div class="d">${st.goal}</div></div>
+      <div class="done">${S.done[st.id]?"✅":"▸"}</div></div>`);
+    row.onclick=()=>{ sfx.tap(); startCh(st.id); };
+    stage.appendChild(row);
+  });
+  stage.appendChild(btnRow("◂ 홈으로","ghost",goHome));
+}
+STAGES.forEach((st,si)=>{
+  CHS[st.id] = { id:st.id, title:st.title, eyebrow:"식당 시뮬레이션", label:`스테이지 ${si+1} · ${st.title}`,
+    back:openSimHub, onDone:openSimHub,
+    steps:[
+      lesson({eyebrow:`🎮 스테이지 ${si+1}`, title:`${st.icon} ${st.title}`,
+        html:`목표: <b>${st.goal}</b><br/><br/>무작정 들어가지 않아요 — 먼저 이 무대에 나올 <b>단어부터</b> 챙기고 입장합니다!`,
+        btn:"단어 챙기러 가기 ▸", tone:"gold"}),
+      tblStep({eyebrow:`📖 스테이지 ${si+1} 단어 미리 챙기기`, rows:st.vocab, cols:["jp","kr"],
+        caption:"이 단어들만 알면 아래 문제는 전부 풀 수 있어요. 입으로 한 번씩 읽고 입장!", btn:"무대 입장 ▸", tone:"coral"}),
+      ...st.items.map((_,i)=>simQ(st,i)),
+      doneStep({title:`${st.icon} ${st.title} 클리어!`,
+        html:`오늘 무대에서 직접 말한 한마디들:<br/><br/>`+st.items.map(it=>`🗣️ <b>${it.a}</b> = ${MEAN[it.a]||""}`).join("<br/>"),
+        btn:"스테이지 목록으로 ▸"}),
+    ]};
+});
+
+/* ═══════════ 이음말(접속어) ═══════════ */
+CHS.chconj = { id:"chconj", title:"이음말 — 말과 말의 풀", eyebrow:"4장 · 이음말", label:"4장 · 이음말",
+ steps:[
+  lesson({eyebrow:"🔗 4장", title:"말과 말을 잇는 풀, 접속어", html:`3장에서 배운 <b>데스 문장</b> 사이에 이음말을 끼우면 대화가 흐르기 시작해요 — 퀴즈 풀며 자연스럽게 <b>데스 복습</b>까지!<br/><br/>"맛있어요. <b>하지만</b> 비싸요." — 이 '하지만' 하나가 문장을 어른스럽게 만들죠.<br/><br/>딱 4개만 외우면 됩니다: <b>소시테(and) · 데모(but) · 소레데(so) · 다카라(that's why)</b><br/>이 6개는 앞으로 2장·3장·식당 문장 어디에나 끼워 쓸 수 있어요!`, btn:"이음말 표 보기 ▸", tone:"gold"}),
+  tblStep({eyebrow:"🔗 이음말 4개 — 표처럼 외워요", rows:CONJ, cols:["jp","kr","ex"],
+    caption:"대화 사이사이에 끼우기만 하면 됩니다!", btn:"빈칸 무오답 관문 ▸"}),
+  gauntlet({tag:"이음말 빈칸 무오답 관문", n:10, bank:[
+    {q:`타카이데스. <b>___</b> 오이시이데스<br/>"비쌉니다. <b>하지만</b> 맛있습니다"`, opts:["데모","소시테","소레데","다카라"], a:"데모", r:"타카이데스. 데모 오이시이데스 = 비쌉니다. 하지만 맛있습니다", akr:"데모 = 하지만 (but)"},
+    {q:`카와이이데스. <b>___</b> 타카이데스<br/>"귀엽습니다. <b>하지만</b> 비쌉니다"`, opts:["데모","다카라","소시테","소레데"], a:"데모", r:"카와이이데스. 데모 타카이데스 = 귀엽습니다. 하지만 비쌉니다", akr:"데모 = 하지만 (but)"},
+    {q:`무료데스. <b>___</b> 스고이데스<br/>"무료입니다. <b>하지만</b> 대단합니다"`, opts:["데모","소레데","소시테","다카라"], a:"데모", r:"무료데스. 데모 스고이데스 = 무료입니다. 하지만 대단합니다", akr:"데모 = 하지만 (but)"},
+    {q:`라멘데스. <b>___</b> 미즈데스<br/>"라멘입니다. <b>그리고</b> 물입니다" (주문 나열!)`, opts:["소시테","데모","다카라","소레데"], a:"소시테", r:"라멘데스. 소시테 미즈데스 = 라멘입니다. 그리고 물입니다", akr:"소시테 = 그리고 (and)"},
+    {q:`야스이데스. <b>___</b> 오이시이데스<br/>"쌉니다. <b>그리고</b> 맛있습니다"`, opts:["소시테","데모","소레데","다카라"], a:"소시테", r:"야스이데스. 소시테 오이시이데스 = 쌉니다. 그리고 맛있습니다", akr:"소시테 = 그리고 (and)"},
+    {q:`스고이데스. <b>___</b> 카와이이데스<br/>"대단합니다. <b>그리고</b> 귀엽습니다"`, opts:["소시테","다카라","데모","소레데"], a:"소시테", r:"스고이데스. 소시테 카와이이데스 = 대단합니다. 그리고 귀엽습니다", akr:"소시테 = 그리고 (and)"},
+    {q:`츠카레타데스. <b>___</b> 카에리마스<br/>"피곤합니다. <b>그래서</b> 돌아갑니다"`, opts:["소레데","데모","소시테","다카라"], a:"소레데", r:"츠카레타데스. 소레데 카에리마스 = 피곤합니다. 그래서 돌아갑니다", akr:"소레데 = 그래서 (so)"},
+    {q:`야스이데스. <b>___</b> 코코데스<br/>"쌉니다. <b>그래서</b> 여기입니다(싸서 여기로 왔어요)"`, opts:["소레데","다카라","소시테","데모"], a:"소레데", r:"야스이데스. 소레데 코코데스 = 쌉니다. 그래서 여기입니다", akr:"소레데 = 그래서 (so)"},
+    {q:`무료데스. <b>___</b> 코코데스<br/>"무료입니다. <b>그래서</b> 여기입니다(그래서 여기로 왔어요)"`, opts:["소레데","소시테","데모","다카라"], a:"소레데", r:"무료데스. 소레데 코코데스 = 무료입니다. 그래서 여기입니다", akr:"소레데 = 그래서 (so)"},
+    {q:`야스이데스. <b>___</b> 스고이데스<br/>"쌉니다. <b>그러니까</b> 대단합니다!"`, opts:["다카라","소레데","데모","소시테"], a:"다카라", r:"야스이데스. 다카라 스고이데스 = 쌉니다. 그러니까 대단합니다", akr:"다카라 = 그러니까 (that's why)"},
+    {q:`오이시이데스. <b>___</b> 코코데스<br/>"맛있습니다. <b>그러니까</b> 여기입니다(그래서 여기 온 거예요)"`, opts:["다카라","소시테","데모","소레데"], a:"다카라", r:"오이시이데스. 다카라 코코데스 = 맛있습니다. 그러니까 여기입니다", akr:"다카라 = 그러니까 (that's why)"},
+    {q:`<b>___</b>, 코레 구다사이<br/>"<b>그러니까</b>, 이것 주세요"`, opts:["다카라","데모","소레데","소시테"], a:"다카라", r:"다카라, 코레 구다사이 = 그러니까, 이것 주세요", akr:"다카라 = 그러니까 (that's why)"}]}),
+  doneStep({title:"이음말 통과!", html:`소시테 = 그리고(and) · 데모 = 하지만(but) · 소레데 = 그래서(so) · 다카라 = 그러니까(that's why)<br/><br/>다카라, 코레 구다사이! — 그러니까, 이것 주세요! 벌써 이음말을 쓰고 있네요 😊<br/><br/>다음은 <b>육하원칙</b> — 드디어 질문 공장!`}),
+ ]};
+
+/* ═══════════ 9장: 심화 반말 · 변신이 다른 동사 4개 ═══════════ */
+CHS.ch9 = { id:"ch9", title:"심화 반말 — 변신 동사", eyebrow:"9장 · 심화 반말", label:"9장 · 심화(반말)",
+ steps:[
+  lesson({eyebrow:"🌪️ 9장", title:"왜 몸통이 바뀔까? — 그래도 공식은 똑같아요", html:`타베루·미루처럼 <b>"이/에" 소리 뒤에 루</b>가 오는 동사는 몸통이 그대로였죠(타베→타베마스).<br/><br/>그런데 일본어 동사는 두 종류예요. <b>이쿠·노무·스루·쿠루</b>는 다른 무리라서, 꼬리가 붙을 때 발음을 매끄럽게 하려고 <b>몸통 끝소리가 살짝 변합니다</b>:<br/>• 이<b>쿠</b> → 이<b>키</b>마스 (쿠→키)<br/>• 노<b>무</b> → 노<b>미</b>마스 (무→미)<br/>• 스루·쿠루는 아예 <b>시·키</b>로!<br/><br/>📌 겁먹지 마세요 — <b>바뀌는 건 몸통뿐, 붙는 꼬리(마스·마쇼·타이·테)는 처음 배운 공식 그대로</b>입니다. 그래서 2장을 했다면 이미 절반은 끝났어요!`, btn:"변신 기계로 확인 ▸", tone:"gold"}),
+  spTransform({mode:"ban", intro:`<b>이쿠·노무·스루·쿠루</b> 4개를 갈아 끼워 보세요. 기본형이 권유·희망·명령·과거로 변신!`, btn:"형태 드릴 시작 ▸"}),
+  buildDrill({tag:"권유형 — 4개", formula:"🙌 권유 — 이코우 · 노모우 · 시요우 · 코요우 (~하자)", rounds:spRounds("ban","권유")}),
+  buildDrill({tag:"희망형 — 4개", formula:"💭 희망 — 이키타이 · 노미타이 · 시타이 · 키타이 (~하고 싶다)", rounds:spRounds("ban","희망")}),
+  buildDrill({tag:"명령형 — 4개", formula:"👉 명령 — 잇테 · 논데 · 시테 · 키테 (~해!)", rounds:spRounds("ban","명령")}),
+  buildDrill({tag:"과거형 — 4개", formula:"⏪ 과거 — 잇타 · 논다 · 시타 · 키타 (~했다)", rounds:spRounds("ban","과거")}),
+  buildDrill({tag:"가정형 — 4개", formula:"🔀 가정 — 잇타라 · 논다라 · 시타라 · 키타라 (~하면)", rounds:spRounds("ban","가정")}),
+  lesson({eyebrow:"🌶️ 무오답 관문", title:"섞어서 10문제 — 틀리면 처음부터", html:`반말 변신을 손에 새겼으니, 4개를 섞어서 10문제! 꼬리는 같고 몸통만 봐요.`, btn:"관문 입장 ▸", tone:"coral"}),
+  gauntlet({tag:"심화 반말 무오답 관문", n:10, bank:[
+    {q:`이쿠 — "<b>가자</b>"는?`, opts:["이코우","이키타이","잇테","잇타"], a:"이코우", r:"이코우 = 가자", akr:"권유 = 이코우"},
+    {q:`이쿠 — "<b>갔다</b>"는?`, opts:["잇타","잇테","이코우","이키타이"], a:"잇타", r:"잇타 = 갔다", akr:"과거 = 잇타"},
+    {q:`이쿠 — "<b>가!</b>"는?`, opts:["잇테","잇타","이코우","이쿠"], a:"잇테", r:"잇테 = 가!", akr:"명령 = 잇테"},
+    {q:`노무 — "<b>마시고 싶다</b>"는?`, opts:["노미타이","노모우","논데","논다"], a:"노미타이", r:"노미타이 = 마시고 싶다", akr:"희망 = 노미타이"},
+    {q:`노무 — "<b>마셔!</b>"는?`, opts:["논데","논다","노모우","노미타이"], a:"논데", r:"논데 = 마셔!", akr:"명령 = 논데"},
+    {q:`노무 — "<b>마시자</b>"는?`, opts:["노모우","노미타이","논데","논다"], a:"노모우", r:"노모우 = 마시자", akr:"권유 = 노모우"},
+    {q:`스루 — "<b>하고 싶다</b>"는?`, opts:["시타이","시요우","시테","시타"], a:"시타이", r:"시타이 = 하고 싶다", akr:"희망 = 시타이"},
+    {q:`스루 — "<b>했다</b>"는?`, opts:["시타","시테","시요우","시타이"], a:"시타", r:"시타 = 했다", akr:"과거 = 시타"},
+    {q:`쿠루 — "<b>와!</b>"는?`, opts:["키테","키타","코요우","키타이"], a:"키테", r:"키테 = 와!", akr:"명령 = 키테"},
+    {q:`쿠루 — "<b>왔다</b>"는?`, opts:["키타","키테","코요우","키타이"], a:"키타", r:"키타 = 왔다", akr:"과거 = 키타"},
+    {q:`쿠루 — "<b>오자</b>"는?`, opts:["코요우","키타이","키테","키타"], a:"코요우", r:"코요우 = 오자", akr:"권유 = 코요우"},
+    {q:`스루 — "<b>해!</b>"는?`, opts:["시테","시타","시요우","시타이"], a:"시테", r:"시테 = 해!", akr:"명령 = 시테"}]}),
+  doneStep({title:"심화 반말 통과!", html:`이쿠→이코우·잇 / 노무→노모우·논 / 스루→시 / 쿠루→코요우·키<br/><br/>반말 변신을 4개 다 정복! 다음 <b>10장</b>에서 같은 4개를 <b>존댓말</b>로 — 방식은 똑같아요!`}),
+ ]};
+
+/* ═══════════ 10장: 심화 존댓말 · 변신이 다른 동사 4개 ═══════════ */
+CHS.ch10 = { id:"ch10", title:"심화 존댓말 — 변신 동사", eyebrow:"10장 · 심화 존댓말", label:"10장 · 심화(존댓말)",
+ steps:[
+  lesson({eyebrow:"🌟 10장", title:"존댓말도 원리는 같아요 — 몸통만 변신", html:`9장에서 본 그대로예요. 이 4개는 <b>몸통 끝소리가 변하는</b> 무리 — 이쿠→이키, 노무→노미, 스루→시, 쿠루→키.<br/><br/>그 변한 몸통 뒤에 <b>3장에서 배운 존댓말 공식</b>을 그대로 붙입니다:<br/>• 이키 + <b>마스</b> = 이키마스 (갑니다)<br/>• 노미 + <b>타이데스</b> = 노미타이데스 (마시고 싶습니다)<br/>• 시 + <b>마쇼</b> = 시마쇼 (합시다)<br/><br/>📌 <b>붙는 꼬리는 처음 배운 공식과 똑같습니다.</b> 새로 외울 건 몸통 변화 4개뿐!`, btn:"변신 기계로 확인 ▸", tone:"gold"}),
+  spTransform({mode:"jon", intro:`<b>이쿠·노무·스루·쿠루</b> 4개의 존댓말. 몸통이 바뀐 뒤 마스·마쇼·타이데스가 붙어요!`, btn:"형태 드릴 시작 ▸"}),
+  buildDrill({tag:"기본형 — 4개", formula:"⭐ 기본 — 이키마스 · 노미마스 · 시마스 · 키마스 (~합니다)", rounds:spRounds("jon","마스")}),
+  buildDrill({tag:"권유형 — 4개", formula:"🙌 권유 — 이키마쇼 · 노미마쇼 · 시마쇼 · 키마쇼 (~합시다)", rounds:spRounds("jon","마쇼")}),
+  buildDrill({tag:"부탁형 — 4개", formula:"👉 부탁 — 잇테 · 논데 · 시테 · 키테 + 구다사이 (~해 주세요)", rounds:spRounds("jon","테 구다사이")}),
+  buildDrill({tag:"과거형 — 4개", formula:"⏪ 과거 — 이키마시타 · 노미마시타 · 시마시타 · 키마시타 (~했습니다)", rounds:spRounds("jon","마시타")}),
+  lesson({eyebrow:"🌶️ 무오답 관문", title:"존댓말 섞어서 10문제 — 틀리면 처음부터", html:`마지막! 4개 존댓말을 섞어서 10문제. 실전 문장도 섞여 있어요.`, btn:"관문 입장 ▸", tone:"coral"}),
+  gauntlet({tag:"심화 존댓말 무오답 관문", n:10, bank:[
+    {q:`이쿠 — "<b>갑니다</b>"는?`, opts:["이키마스","이쿠마스","잇마스","이키마쇼"], a:"이키마스", r:"이키마스 = 갑니다", akr:"이쿠 → 이키 + 마스"},
+    {q:`이쿠 — "<b>가 주세요</b>"는?`, opts:["잇테 구다사이","이키테 구다사이","이쿠테 구다사이","이키마쇼"], a:"잇테 구다사이", r:"잇테 구다사이 = 가 주세요", akr:"이쿠는 부탁에서 잇테!"},
+    {q:`노무 — "<b>마십니다</b>"는?`, opts:["노미마스","노무마스","논마스","노미마쇼"], a:"노미마스", r:"노미마스 = 마십니다", akr:"노무 → 노미 + 마스"},
+    {q:`노무 — "<b>마셔 주세요</b>"는?`, opts:["논데 구다사이","노미테 구다사이","노무테 구다사이","노미마쇼"], a:"논데 구다사이", r:"논데 구다사이 = 마셔 주세요", akr:"노무는 부탁에서 논데!"},
+    {q:`스루 — "<b>합니다</b>"는?`, opts:["시마스","스루마스","시마쇼","시마시타"], a:"시마스", r:"시마스 = 합니다", akr:"스루 → 시 + 마스"},
+    {q:`스루 — "<b>했습니다</b>"는?`, opts:["시마시타","시타","시마스","시마센"], a:"시마시타", r:"시마시타 = 했습니다", akr:"스루 → 시 + 마시타"},
+    {q:`쿠루 — "<b>옵니다</b>"는?`, opts:["키마스","쿠루마스","키마쇼","키마시타"], a:"키마스", r:"키마스 = 옵니다", akr:"쿠루 → 키 + 마스"},
+    {q:`쿠루 — "<b>와 주세요</b>"는?`, opts:["키테 구다사이","쿠루테 구다사이","키마스 구다사이","키마쇼"], a:"키테 구다사이", r:"키테 구다사이 = 와 주세요", akr:"쿠루 → 키테 + 구다사이"},
+    {q:`이쿠 — "<b>갑시다</b>"는?`, opts:["이키마쇼","이키마스","잇테마쇼","이키마스카"], a:"이키마쇼", r:"이키마쇼 = 갑시다", akr:"이쿠 → 이키 + 마쇼"},
+    {q:`실전! "<b>맥주를 마시고 싶습니다</b>"는? (비루 = 맥주)`, opts:["비루오 노미타이데스","비루오 노무타이데스","비루와 노미타이데스","비루오 노미마스카"], a:"비루오 노미타이데스", r:"비루오 노미타이데스 = 맥주를 마시고 싶습니다", akr:"오(을·1장) + 노미타이데스!"},
+    {q:`실전! "<b>호텔로 가 주세요</b>"는? (호테루니 = 호텔로)`, opts:["호테루니 잇테 구다사이","호테루니 이키테 구다사이","호테루데 잇테 구다사이","호테루니 이키마쇼"], a:"호테루니 잇테 구다사이", r:"호테루니 잇테 구다사이 = 호텔로 가 주세요", akr:"택시 필수!"},
+    {q:`실전! "<b>한국에서 왔습니다</b>"는? (캉코쿠카라 = 한국에서)`, opts:["캉코쿠카라 키마시타","캉코쿠카라 키마스","캉코쿠데 키마시타","캉코쿠카라 쿠루마시타"], a:"캉코쿠카라 키마시타", r:"캉코쿠카라 키마시타 = 한국에서 왔습니다", akr:"카라(부터) + 키마시타!"}]}),
+  doneStep({title:"심화 존댓말 통과!", html:`이쿠·노무·스루·쿠루 — 반말과 존댓말 양쪽을 본편 동사처럼 정복했어요. <b>몸통은 바뀌어도 꼬리 공식은 그대로!</b><br/><br/>이제 <b>11장</b>에서 아껴 둔 <b>조사 5개</b>를 마저 배우고 졸업합니다!`}),
+ ]};
+
+/* ═══════════ 11장: 보너스 조사 5개 (가·니·노·모·카라) ═══════════ */
+CHS.ch11 = { id:"ch11", title:"보너스 조사 5개", eyebrow:"11장 · 보너스 조사", label:"11장 · 보너스 조사",
+ steps:[
+  lesson({eyebrow:"🧷 11장", title:"아껴 둔 조사 5개 — 이제 조사 완성!", html:`1장에서 핵심 6개(와·오·데·토·마데·카)를 배웠죠. 식당 여행엔 그걸로 충분했지만, 이 <b>5개</b>를 더하면 조사가 완성됩니다.<br/><br/>🔸 <b>가</b> = 이/가<br/>🔸 <b>니</b> = 에/에게<br/>🔸 <b>노</b> = 의<br/>🔸 <b>모</b> = 도<br/>🔸 <b>카라</b> = 부터<br/><br/>방식은 1장과 똑같아요 — <b>한 조사씩 5문제 주입</b> 후, <b>1장 조사까지 섞은 무오답 10문제</b>로 마무리!`, btn:"표 훑고 시작 ▸", tone:"gold"}),
+  tblStep({eyebrow:"🧷 보너스 조사 5 — 참고표", rows:PARTICLES_EX, cols:["p","kr","ex"],
+    caption:"눈으로만 훑으세요 — 바로 손으로 익힙니다!", btn:"가부터 5문제 ▸"}),
+  pickDrill({p:"가", kr:"이 / 가", decoys:["와","오","니"], items:[
+    {w:"라멘", ko:"라멘이"},{w:"미즈(물)", ko:"물이"},{w:"코레(이것)", ko:"이것이"},{w:"카조쿠(가족)", ko:"가족이"},{w:"호테루(호텔)", ko:"호텔이"}]}),
+  pickDrill({p:"니", kr:"에 / 에게", decoys:["데","마데","오"], items:[
+    {w:"호테루(호텔)", ko:"호텔에"},{w:"토쿄(도쿄)", ko:"도쿄에"},{w:"코코(여기)", ko:"여기에"},{w:"토모다치(친구)", ko:"친구에게"},{w:"니혼(일본)", ko:"일본에"}]}),
+  pickDrill({p:"노", kr:"의", decoys:["와","토","가"], items:[
+    {w:"와타시(나)", ko:"나의"},{w:"카조쿠(가족)", ko:"가족의"},{w:"토모다치(친구)", ko:"친구의"},{w:"니혼(일본)", ko:"일본의"},{w:"호테루(호텔)", ko:"호텔의"}]}),
+  pickDrill({p:"모", kr:"도", decoys:["와","오","데"], items:[
+    {w:"무료", ko:"무료도"},{w:"라멘", ko:"라멘도"},{w:"코레(이것)", ko:"이것도"},{w:"와타시(나)", ko:"나도"},{w:"미즈(물)", ko:"물도"}]}),
+  pickDrill({p:"카라", kr:"부터", decoys:["마데","데","니"], items:[
+    {w:"소우루(서울)", ko:"서울부터"},{w:"토쿄(도쿄)", ko:"도쿄부터"},{w:"니혼(일본)", ko:"일본부터"},{w:"코코(여기)", ko:"여기부터"},{w:"호테루(호텔)", ko:"호텔부터"}]}),
+  lesson({eyebrow:"🌶️ 조사 총정리 관문", title:"신·구 조사 섞어서 10문제", html:`방금 배운 5개 + 1장의 6개(와·오·데·토·마데·카)를 <b>전부 섞어서</b> 10문제! 하나라도 틀리면 처음부터예요. 이걸 넘으면 조사 11개 완전 정복입니다.`, btn:"관문 입장 ▸", tone:"coral"}),
+  gauntlet({tag:"조사 총정리 무오답 관문", n:10, bank:[
+    {q:`<b>라멘</b> + __ = "라멘이" (이/가)`, opts:["가","와","오","니"], a:"가", r:"라멘가 = 라멘이", akr:"가 = 이/가 (11장)"},
+    {q:`<b>호테루(호텔)</b> + __ = "호텔에"`, opts:["니","데","마데","가"], a:"니", r:"호테루니 = 호텔에", akr:"니 = 에/에게 (11장)"},
+    {q:`<b>와타시(나)</b> + __ = "나의"`, opts:["노","가","와","모"], a:"노", r:"와타시노 = 나의", akr:"노 = 의 (11장)"},
+    {q:`<b>무료</b> + __ = "무료도"`, opts:["모","와","오","카라"], a:"모", r:"무료모 = 무료도", akr:"모 = 도 (11장)"},
+    {q:`<b>소우루(서울)</b> + __ = "서울부터"`, opts:["카라","마데","데","니"], a:"카라", r:"소우루카라 = 서울부터", akr:"카라 = 부터 (11장)"},
+    {q:`<b>야쿠소쿠(약속)</b> + __ = "약속을"`, opts:["오","와","니","가"], a:"오", r:"야쿠소쿠오 = 약속을", akr:"오 = 을/를 (1장)"},
+    {q:`<b>카조쿠(가족)</b> + __ = "가족이랑"`, opts:["토","와","노","오"], a:"토", r:"카조쿠토 = 가족이랑", akr:"토 = 랑 (1장)"},
+    {q:`<b>소우루(서울)</b> + __ = "서울에서"`, opts:["데","니","카라","마데"], a:"데", r:"소우루데 = 서울에서", akr:"데 = 에서 (1장)"},
+    {q:`<b>호테루(호텔)</b> + __ = "호텔까지"`, opts:["마데","카라","니","데"], a:"마데", r:"호테루마데 = 호텔까지", akr:"마데 = 까지 (1장)"},
+    {q:`<b>무료데스</b> + __ = "무료입니까?"`, opts:["카","와","모","노"], a:"카", r:"무료데스카 = 무료입니까?", akr:"카 = 질문 (1장)"},
+    {q:`"<b>서울부터</b>"는? (카라 vs 마데 주의!)`, opts:["소우루카라","소우루마데","소우루데","소우루니"], a:"소우루카라", r:"소우루카라 = 서울부터", akr:"부터 = 카라 (마데는 까지!)"},
+    {q:`"<b>친구에게</b>"는?`, opts:["토모다치니","토모다치토","토모다치노","토모다치가"], a:"토모다치니", r:"토모다치니 = 친구에게", akr:"에/에게 = 니 (토는 랑!)"}]}),
+  doneStep({title:"조사 완전 정복!", html:`🧷 핵심 6 (와·오·데·토·마데·카) + 보너스 5 (가·니·노·모·카라) = <b>조사 11개 완성</b>!<br/><br/>이제 진짜 마지막 — <b>졸업 종합 퀴즈</b>로!`}),
+ ]};
+
+/* ═══════════ 졸업 종합 퀴즈 — 1~11장(0·6·8 제외) 20문제 ═══════════ */
+CHS.chfinal = { id:"chfinal", title:"졸업 종합 퀴즈", eyebrow:"🎓 졸업 종합", label:"졸업 종합 퀴즈",
+ steps:[
+  lesson({eyebrow:"🎓 마지막 관문", title:"그동안 배운 전부 — 랜덤 20문제", html:`조사(1·11장) · 반말(2장) · 존댓말(3장) · 이음말(4장) · 육하원칙(5장) · 식당 인사(7장) · 변신 동사 반말·존댓말(9·10장) — 지금까지의 전부가 섞여 나옵니다.<br/><br/>규칙은 하나: <b>하나라도 틀리면 처음부터.</b> 20연속이면 졸업입니다!`, btn:"졸업 관문 입장 ▸", tone:"gold"}),
+  gauntlet({tag:"졸업 종합 무오답 관문", n:20, bank:[
+    // 1장 조사
+    {q:`<b>야쿠소쿠(약속)</b> + __ = "약속을"`, opts:["오","와","데","토"], a:"오", r:"야쿠소쿠오 = 약속을", akr:"오 = 을/를 (1장)"},
+    {q:`<b>소우루(서울)</b> + __ = "서울에서"`, opts:["데","마데","와","토"], a:"데", r:"소우루데 = 서울에서", akr:"데 = 에서 (1장)"},
+    {q:`<b>카조쿠(가족)</b> + __ = "가족이랑"`, opts:["토","와","오","마데"], a:"토", r:"카조쿠토 = 가족이랑", akr:"토 = 랑 (1장)"},
+    // 11장 보너스 조사
+    {q:`<b>와타시(나)</b> + __ = "나의"`, opts:["노","가","와","모"], a:"노", r:"와타시노 = 나의", akr:"노 = 의 (11장)"},
+    {q:`<b>호테루(호텔)</b> + __ = "호텔에"`, opts:["니","데","마데","가"], a:"니", r:"호테루니 = 호텔에", akr:"니 = 에/에게 (11장)"},
+    {q:`"<b>서울부터</b>"는? (카라 vs 마데!)`, opts:["소우루카라","소우루마데","소우루데","소우루니"], a:"소우루카라", r:"소우루카라 = 서울부터", akr:"부터 = 카라 (11장)"},
+    // 2장 반말
+    {q:`"<b>먹자</b>"는? (반말)`, opts:["타베요우","타베타","타베테","타베타이"], a:"타베요우", r:"타베요우 = 먹자", akr:"권유 = 요우 (2장)"},
+    {q:`"<b>봤다</b>"는? (반말)`, opts:["미타","미테","미타이","미요우"], a:"미타", r:"미타 = 봤다", akr:"과거 = 타 (2장)"},
+    // 3장 존댓말
+    {q:`"<b>봅니까?</b>"는?`, opts:["미마스카","미마스","미마쇼","미마센"], a:"미마스카", r:"미마스카 = 봅니까?", akr:"의문 = 마스카 (3장)"},
+    {q:`"<b>먹어 주세요</b>"는?`, opts:["타베테 구다사이","타베테","타베마쇼","타베나이"], a:"타베테 구다사이", r:"타베테 구다사이 = 먹어 주세요", akr:"부탁 = 테 + 구다사이 (3장)"},
+    {q:`"<b>대단합니다</b>"는?`, opts:["스고이데스","스고이마스","스고이카","스고데스"], a:"스고이데스", r:"스고이데스 = 대단합니다", akr:"형용사 + 데스 (3장)"},
+    // 4장 이음말
+    {q:`타카이데스. <b>___</b> 오이시이데스<br/>"비쌉니다. <b>하지만</b> 맛있습니다"`, opts:["데모","소시테","소레데","다카라"], a:"데모", r:"타카이데스. 데모 오이시이데스", akr:"데모 = 하지만 (4장)"},
+    {q:`라멘데스. <b>___</b> 미즈데스<br/>"라멘입니다. <b>그리고</b> 물입니다"`, opts:["소시테","데모","다카라","소레데"], a:"소시테", r:"라멘데스. 소시테 미즈데스", akr:"소시테 = 그리고 (4장)"},
+    // 5장 육하원칙
+    {q:`"<b>어디</b>입니까?" (where)는?`, opts:["도코데스카","나니데스카","다레데스카","이츠데스카"], a:"도코데스카", r:"도코데스카 = 어디입니까?", akr:"도코 = where (5장)"},
+    {q:`"<b>무엇을</b>"은?`, opts:["나니오","나니와","나니토","나니데"], a:"나니오", r:"나니오 = 무엇을", akr:"나니 + 오 (5장)"},
+    // 7장 식당 인사
+    {q:`👋 다 먹고 나가며 — "<b>잘 먹었습니다</b>"는?`, opts:["고치소사마데시타","이타다키마스","스미마셍","오네가이시마스"], a:"고치소사마데시타", r:"고치소사마데시타 = 잘 먹었습니다", akr:"식사 끝 인사 (7장)"},
+    {q:`👉 "<b>이것 부탁합니다</b>"는?`, opts:["코레 오네가이시마스","코레와 오네가이시마스","코레토 오네가이시마스","코레데스카"], a:"코레 오네가이시마스", r:"코레 오네가이시마스 = 이것 부탁합니다", akr:"단어 + 오네가이시마스 (7장)"},
+    // 9·10장 변신 동사
+    {q:`이쿠 — "<b>가 주세요</b>"는? (존댓말)`, opts:["잇테 구다사이","이키테 구다사이","이쿠테 구다사이","이키마쇼"], a:"잇테 구다사이", r:"잇테 구다사이 = 가 주세요", akr:"이쿠 → 잇테 (10장)"},
+    {q:`실전! "<b>맥주를 마시고 싶습니다</b>"는?`, opts:["비루오 노미타이데스","비루오 노무타이데스","비루와 노미타이데스","비루오 노미마스카"], a:"비루오 노미타이데스", r:"비루오 노미타이데스 = 맥주를 마시고 싶습니다", akr:"오 + 노미타이데스 (1·10장)"},
+    {q:`실전! "<b>한국에서 왔습니다</b>"는?`, opts:["캉코쿠카라 키마시타","캉코쿠카라 키마스","캉코쿠데 키마시타","캉코쿠카라 쿠루마시타"], a:"캉코쿠카라 키마시타", r:"캉코쿠카라 키마시타 = 한국에서 왔습니다", akr:"카라 + 키마시타 (11·10장)"},
+    {q:`노무 — "<b>마셔 주세요</b>"는?`, opts:["논데 구다사이","노미테 구다사이","노무테 구다사이","노미마쇼"], a:"논데 구다사이", r:"논데 구다사이 = 마셔 주세요", akr:"노무 → 논데 (10장)"},
+    {q:`스루 — "<b>합시다</b>"는?`, opts:["시마쇼","시마스","시마시타","스루마쇼"], a:"시마쇼", r:"시마쇼 = 합시다", akr:"스루 → 시 (10장)"},
+    {q:`실전! "<b>화장실은 어디입니까?</b>"는?`, opts:["토이레와 도코데스카","토이레와 다레데스카","토이레마데 도코데스카","토이레 구다사이"], a:"토이레와 도코데스카", r:"토이레와 도코데스카 = 화장실은 어디입니까?", akr:"와 + 도코 + 데스카 (1·5장)"}]}),
+  doneStep({title:"졸업 축하합니다! 🎉🎓", html:`전 과정을 끝까지 해내셨어요. 이제 일본어가 더 이상 낯선 외국어가 아니라, <b>구조가 보이는 익숙한 말</b>이 되었을 거예요.<br/><br/><b>지금부터가 진짜 시작입니다.</b><br/><br/>🗣️ <b>일상에서 자꾸 써보세요.</b> 혼잣말로 "코레 타베타이"(이거 먹고 싶다), "이키마쇼"(가자) — 배운 구조를 입에 붙일수록 자연스러워집니다.<br/><br/>🔡 <b>이제 히라가나·가타카나에 도전해 보세요.</b> 발음과 구조를 이미 알고 있으니, 글자는 거부감 없이 술술 들어옵니다. "아, 타베루가 이렇게 쓰이는구나" 하고 금방 연결될 거예요.<br/><br/>📚 <b>단어와 동사를 몇 개씩만 더하세요.</b> 뼈대(공식)는 이미 완성됐으니, 어휘만 하나씩 끼우면 표현할 수 있는 말이 폭발적으로 늘어납니다.<br/><br/>오늘 닦은 이 구조 위에, 당신의 일본어는 계속 자랍니다. 잘하셨어요! 🌱`, btn:"처음 화면으로 ▸"}),
+ ]};
+
+/* ═══════════ 부록/* ═══════════ 부록 · 암기 노트 ═══════════ */
+const VERB_ALL = VERBS.map(v=>({jp:v.base, kr:v.mean}))
+  .concat(VERBS_SP.map(v=>({jp:v.base, kr:v.mean})));
+CHS.chmessage = { id:"chmessage", title:"📝 만든 사람의 말", eyebrow:"📝 만든 사람의 말", label:"📝 만든 사람의 말",
+ steps:[
+lesson({eyebrow:"🌱 마지막으로", title:"이 앱에 대하여", html:`여기서 배운 건 고급 일본어도, 교과서식 정석 일본어도 아닙니다.<br/><br/>하지만 우리가 한국어를 쓸 때도 늘 교과서처럼 말하지는 않습니다. 가게에서 “카드를 사용해도 되겠습니까?”라고 길게 말하기보다 “카드 돼요?”라고 묻고, “화장실은 어디에 위치해 있습니까?”보다 “화장실 어디예요?”라고 말합니다. “물을 제공해 주실 수 있습니까?”보다 “물 주세요”가 먼저 나오죠.<br/><br/><b>생활에서 먼저 필요한 건 완벽한 문장이 아니라, 바로 통하는 말입니다.</b><br/><br/>아이가 처음 “엄마, 맘마”라고 말할 때, “아니야, ‘어머니, 식사를 주십시오’라고 해야 해”라고 가르치지는 않습니다. 그렇게 하면 말은 더 어려워질 뿐입니다.<br/><br/><b>언어는 말하기가 먼저입니다.</b><br/><br/>이 앱은 말을 쉽게 트이게 하면서, 동시에 구조를 쥐어줍니다. 그래서 배운 적 없는 문장도 스스로 만들 수 있습니다.<br/><br/><div style="background:var(--gold-bg, #fff8e6); border-radius:10px; padding:11px 13px; margin:4px 0;">예를 들어, <b>“먹어 봐도 돼요?”</b>를 일본어로 말한다면?<br/><br/>타베루 → <b style="color:var(--coral);">타베테</b> = 먹어<br/>미루 → <b style="color:var(--coral);">미테</b> = 봐<br/><b style="color:#7a5cff;">모</b> = ~해도 · <b style="color:#1f9d6b;">이이</b> = 좋아 · <b style="color:#c8861d;">데스카</b> = 습니까?<br/><br/>그래서,<br/><b style="font-size:16px;">타베테 미테모 이이데스카?</b><br/>= 먹어 봐도 좋습니까? = 먹어 봐도 돼요?<br/><br/><span style="font-size:12.5px; color:var(--sub);">이건 통째로 외운 문장이 아닙니다. <b>이미 배운 부품을 끼운 것</b>뿐입니다.</span></div><br/>많은 언어에서는 한국어 순서 그대로 이렇게 조립하기 어렵습니다. 영어로 “먹어 봐”를 만들려고 “eat see”를 붙이면 뜻이 무너집니다. 단어 순서도 다르고, 말의 구조도 다르기 때문입니다.<br/><br/>그런데 <b>한국어와 일본어는 놀라울 만큼 닮았습니다.</b><br/>“먹어 봐도 돼요?”의 흐름 그대로 “타베테 미테모 이이데스카?”가 됩니다. 어순이 닮았고, 조사가 있고, 많은 한자어도 우리에게 익숙합니다.<br/><br/><b>한국인에게 일본어는 세상에서 가장 가까운 외국어입니다.</b> 이미 절반은 알고 시작하는 언어에 가깝습니다.<br/><br/>이 앱은 어학 학습의 순서를 바꿨습니다. 문자부터도 아니고, 어려운 문법부터도 아닙니다. 먼저 말이 트이게 하고, 그다음 구조가 보이게 합니다. <b>쉽게, 빠르게, 그리고 스스로 확장되게.</b> 그게 이 앱의 의도입니다.<br/><br/>자, 이제 당신의 일본어를 시작하세요. 🇯🇵`, btn:"닫기 ▸", tone:"gold"}),
+  doneStep({title:"고맙습니다 🙌", html:`이 앱이 당신의 일본어 첫걸음에 작은 힘이 되었길 바랍니다. 계속 즐겁게 확장해 가세요!`, btn:"처음 화면으로 ▸"}),
+ ]};
+
+CHS.chvoca = { id:"chvoca", title:"배운 김에 더!", eyebrow:"배운 김에 더!", label:"배운 김에 더!",
+ steps:[
+  lesson({eyebrow:"🚀 배운 김에 더!", title:"끝이 아니에요 — 공식 3개만 더!", html:`졸업했지만, 지금 머리가 가장 말랑할 때예요. <b>이미 아는 단어</b>에 꼬리만 더 붙이면 표현이 확 늘어납니다.<br/><br/>1️⃣ 자주 쓰는 <b>형용사</b> — 데스 공식에 그대로!<br/>2️⃣ 자주 쓰는 <b>한마디</b> — 반말 ↔ 존댓말 짝!<br/>3️⃣ <b>가능형</b> (데키마스) = ~할 수 있다<br/>4️⃣ <b>의도형</b> (츠모리데스) = ~할 생각이다<br/>5️⃣ <b>추측형</b> (데쇼) = ~겠죠<br/><br/>전부 외울 활용 없이, <b>단어 + 꼬리</b>면 끝. 가볍게 맛만 보고 가요!`, btn:"형용사부터 ▸", tone:"gold"}),
+  tblStep({eyebrow:"1️⃣ 자주 쓰는 형용사 — 데스만 붙이면 끝", rows:ADJ_MORE, cols:["jp","kr"],
+    caption:"💡 전부 <b>이</b>로 끝나죠? 3장에서 배운 그대로 <b>+ 데스</b>! 마즈이데스(맛없습니다)·치카이데스(가깝습니다)…", btn:"자주 쓰는 한마디 ▸"}),
+  pairStep({eyebrow:"2️⃣ 자주 쓰는 한마디 — 반말 ↔ 존댓말", rows:CASUAL_PAIR,
+    caption:"💡 친구에겐 <b>왼쪽(반말)</b>, 점원·어른에겐 <b>오른쪽(존댓말)</b>! 칸을 누르면 각각 발음돼요. 치가이마스(아니에요)·다이죠부데스(괜찮아요)는 여행 내내 써요.", btn:"가능형 데키마스 ▸", tone:"coral"}),
+  lesson({eyebrow:"3️⃣ 가능형 (potential) · 데키마스", title:"○○ 데키마스카 = ~ 할 수 있나요?", html:`이미 "카도 데키마스카(카드 됩니까?)"를 배웠죠. 그 <b>데키마스</b>가 만능이에요.<br/><br/>단어 + <b>데키마스카</b>:<br/>🔸 요야쿠 데키마스카 = 예약 되나요?<br/>🔸 와이파이 데키마스카 = 와이파이 되나요?<br/><br/>단어만 갈아 끼우면 "○○ 할 수 있나요?"가 무한 생산!`, btn:"가능형 드릴 ▸", tone:"coral"}),
+  buildDrill({tag:"가능형 (potential) ×3", formula:"🔧 단어 + 데키마스카 = ~할 수 있나요?",
+    rounds:[
+      {ko:"예약 되나요?", parts:["요야쿠","데키마스카"], jp:"요야쿠 데키마스카", pm:"요야쿠 = 예약"},
+      {ko:"카드 되나요?", parts:["카도","데키마스카"], jp:"카도 데키마스카", pm:"카도 = 카드"},
+      {ko:"와이파이 되나요?", parts:["와이파이","데키마스카"], jp:"와이파이 데키마스카", pm:"와이파이 = 와이파이", note:"📝 단어만 바꾸면 무엇이든 '○○ 되나요?'!"},
+    ]}),
+  lesson({eyebrow:"4️⃣ 의도형 (intention) · 츠모리데스", title:"동사 + 츠모리데스 = ~할 생각이에요", html:`동사 <b>기본형</b> 뒤에 <b>츠모리데스</b>만 붙이면 '계획·의도'가 됩니다. (활용 없이 기본형 그대로!)<br/><br/>🔸 타베루 츠모리데스 = 먹을 생각이에요<br/>🔸 이쿠 츠모리데스 = 갈 생각이에요<br/>🔸 미루 츠모리데스 = 볼 생각이에요<br/><br/>여행 계획 말할 때 딱이에요!`, btn:"의도형 드릴 ▸", tone:"coral"}),
+  buildDrill({tag:"의도형 (intention) ×3", formula:"🗓️ 동사 기본형 + 츠모리데스 = ~할 생각이에요",
+    rounds:[
+      {ko:"먹을 생각이에요", parts:["타베루","츠모리데스"], jp:"타베루 츠모리데스", pm:"타베루 = 먹다"},
+      {ko:"갈 생각이에요", parts:["이쿠","츠모리데스"], jp:"이쿠 츠모리데스", pm:"이쿠 = 가다"},
+      {ko:"볼 생각이에요", parts:["미루","츠모리데스"], jp:"미루 츠모리데스", pm:"미루 = 보다", note:"📝 기본형 + 츠모리데스 — 활용 안 해서 제일 쉬운 표현!"},
+    ]}),
+  lesson({eyebrow:"5️⃣ 추측형 (presumptive) · 데쇼", title:"○○ 데쇼 = ~겠죠 / ~일 거예요", html:`데스 자리에 <b>데쇼</b>를 넣으면 '추측'이 됩니다. 단정 대신 부드럽게!<br/><br/>🔸 오이시이데쇼 = 맛있겠죠<br/>🔸 타카이데쇼 = 비싸겠죠<br/>🔸 다이죠부데쇼 = 괜찮겠죠<br/><br/>날씨·예상을 말할 때 자연스러워요.`, btn:"추측형 드릴 ▸", tone:"coral"}),
+  buildDrill({tag:"추측형 (presumptive) ×3", formula:"🌤️ 단어 + 데쇼 = ~겠죠 / ~일 거예요",
+    rounds:[
+      {ko:"맛있겠죠", parts:["오이시이","데쇼"], jp:"오이시이데쇼", pm:"오이시이 = 맛있다"},
+      {ko:"비싸겠죠", parts:["타카이","데쇼"], jp:"타카이데쇼", pm:"타카이 = 비싸다"},
+      {ko:"괜찮겠죠", parts:["다이죠부","데쇼"], jp:"다이죠부데쇼", pm:"다이죠부 = 괜찮다", note:"📝 데스 → 데쇼로만 바꿔도 '추측'이 돼요!"},
+    ]}),
+  doneStep({title:"진짜 한 걸음 더 갔어요! 🚀", html:`형용사 10개 + 반말↔존댓말 한마디 6쌍 + 가능형(데키마스) + 의도형(츠모리데스) + 추측형(데쇼) — 공식 위에 어휘만 얹어 표현이 훌쩍 늘었어요.<br/><br/>이게 이 앱의 비밀이에요: <b>구조 하나면, 단어를 더할수록 말이 폭발적으로 늘어납니다.</b> 이제 새 단어를 만날 때마다 직접 끼워 보세요!`, btn:"처음 화면으로 ▸"}),
+ ]};
+
+/* ═══════════ 인트로 & 홈 메뉴 ═══════════ */
+function goIntro(){
+  S.mode="intro"; S.ch=null;
+  setHead("하루면 말이 트이는","말문일본어"); chrome("intro");
+  stage.innerHTML="";
+  stage.appendChild(elN(`<div class="card fade-up">
+    <div style="font-size:30px; text-align:center;">🍼🗣️</div>
+    <div style="text-align:center; margin-top:4px;">
+      <div style="font-size:24px; font-weight:900; letter-spacing:-.01em;">말문일본어</div>
+      <div style="display:inline-block; margin-top:6px; padding:3px 12px; border-radius:999px; background:var(--coral); color:#fff; font-size:11.5px; font-weight:800;">외우지 말고, 구조로 — 한국어가 치트키</div>
+    </div>
+    <div class="eyebrow gold-t" style="text-align:center; margin-top:14px;">이 앱의 원리</div>
+    <div class="h" style="font-size:18px; line-height:1.45; text-align:center;">아기는 문장부터 배우지 않습니다.<br/>말부터 합니다.</div>
+    <div class="body">아기는 문법책으로 말을 배우지 않습니다. 먼저 <b>듣고, 따라 하고, 짧게 말하면서</b> 배웁니다. 처음부터 어려운 문장이나 존댓말을 배우는 것도 아닙니다. 가장 쉬운 말부터 반복하고, <b>반말 구조를 먼저</b> 익힌 뒤, 나중에 더 공손한 말과 긴 문장으로 확장합니다.<br/><br/>문자부터 시작하면 머리가 복잡해지고, 말하기 전에 지칠 수 있습니다. 하지만 <b>말부터 시작하면 바로 입이 움직이고, 구조가 몸에 쌓입니다.</b> 그렇게 말의 감각이 쌓이면 배우는 속도는 훨씬 빨라집니다.<br/><br/><b>말문일본어는 이 원리로 만들었습니다.</b></div></div>`));
+  stage.appendChild(elN(`<div class="card fade-up" style="border-color:var(--coral);">
+    <div class="eyebrow coral-t">🃏 어른의 치트키</div>
+    <div class="h" style="font-size:15px;">우리는 아기보다 훨씬 빠를 수 있습니다</div>
+    <div class="body">외국어를 빨리 배우려면 <b>국어부터</b> 잘해야 합니다. 그런데 우리는 이미 한국어를 잘하죠.<br/><br/><b>아주 기초적인 국어</b> — 명사·형용사·동사·조사 구분 — 만 한 번 더 숙지하고 넘어가면, <b>아기보다 훨씬 빠르게</b> 배울 수 있습니다. 이것이 어른의 차이점입니다.<br/><br/>그래서 이 앱은 <b>아주 간단한 국어 공부(0장)만 가볍게</b> 진행하고, 바로 일본어 말문으로 갑니다.</div></div>`));
+  stage.appendChild(elN(`<div class="card fade-up" style="background:var(--gold-bg); border-color:var(--gold);">
+    <div class="body" style="text-align:center;">히라가나를 몰라도 괜찮습니다.<br/>먼저 한국어 구조로 이해하고, 한글 발음으로 직접 말해보세요.<br/><br/>읽는 것은 AI가 도와줄 수 있습니다.<br/><b>직접 건네는 한마디는 내가 해야 합니다.</b></div></div>`));
+  stage.appendChild(btnRow("시작하기 ▸","gold",goHome));
+}
+const HOME_COURSES = [
+  {id:"ch0",  icon:"🧩", t:"0장 · 한국어 구조부터", d:"명사·형용사·동사·조사·꼬리 — 말의 부품 5개 (퀴즈 4)"},
+  {id:"ch1",  icon:"🧷", t:"1장 · 핵심 조사 6개", d:"와·오·데·토·마데·카 — 조사별 집중 6회 + 무오답 10"},
+  {id:"ch2",  icon:"🦴", t:"2장 · 동사 변신 (반말)", d:"의문·권유·희망·과거·명령·부정 드릴 → 무오답 10"},
+  {id:"ch3",  icon:"🎀", t:"3장 · 존댓말 공식", d:"데스=입니다 · 마스=습니다 — 형태 드릴 → 무오답 10"},
+  {id:"chconj", icon:"🔗", t:"4장 · 이음말 (접속어)", d:"소시테·데모·소레데·다카라 — 데스 문장 빈칸 무오답 10"},
+  {id:"chq",  icon:"❓", t:"5장 · 육하원칙 — 질문", d:"when~why + 데스카 합체 드릴 → 무오답 10"},
+  {id:"chmid", icon:"🏔️", t:"6장 · 중간 종합 관문", d:"1~5장 총정리 — 랜덤 20문제, 틀리면 처음부터"},
+  {id:"ch4",  icon:"🍜", t:"7장 · 식당 생존", d:"통째 인사 6개 + 상황 무오답 10 (배운 것 변별)"},
+  {id:"sim",  icon:"🎮", t:"8장 · 식당 시뮬레이션", d:"4스테이지 — 단어 챙기고 입장: 라멘집·옆자리·이자카야·계산", open:openSimHub, dn:()=>["sim1","sim2","sim3","sim4"].every(k=>S.done[k])},
+  {id:"ch9",  icon:"🌪️", t:"9장 · 심화 반말 (변신 동사)", d:"이쿠·노무·스루·쿠루 — 권유·희망·명령·과거 드릴 + 무오답 10"},
+  {id:"ch10", icon:"🌟", t:"10장 · 심화 존댓말 (변신 동사)", d:"같은 4개 — 기본·권유·부탁·과거 드릴 + 무오답 10"},
+  {id:"ch11", icon:"🧷", t:"11장 · 보너스 조사 5개", d:"가·니·노·모·카라 — 집중 5회 + 1장 조사까지 무오답 10"},
+  {id:"chfinal", icon:"🎓", t:"졸업 종합 퀴즈", d:"1~11장 전 범위 — 랜덤 20문제, 틀리면 처음부터"},
+  {id:"chvoca", icon:"🚀", t:"배운 김에 더!", d:"자주 쓰는 형용사 + 데키마스·츠모리·데쇼 — 공식 3개 더"},
+  {id:"chmessage", icon:"📝", t:"만든 사람의 말", d:"모든 과정을 끝낸 당신에게 — 이 앱을 왜, 어떻게 만들었는지"},
+];
+let resetArm=false;
+function renderHome(){
+  stage.innerHTML="";
+  stage.appendChild(elN(`<div class="card fade-up" style="padding:12px 16px;">
+    <div class="eyebrow gold-t">전체 여정 · 0~11장 + 시뮬 · 졸업 · 배운 김에 더</div>
+    <div class="body" style="font-size:12.5px;">🧩 기초(0~1장) → 🗣️ 말 만들기(2~5장) → 🏔️ 종합·실전(6~8장) → 🌪️ 심화(9~11장) → 🎓 졸업 → 🚀 배운 김에 더.<br/><b>앞 장을 통과해야 다음 장이 열려요.</b> 위에서부터 차근차근, 각 장은 <b>틀리면 처음부터</b> 관문으로 마무리됩니다!</div></div>`));
+  let prevCleared = true; // 0장은 항상 열림
+  HOME_COURSES.forEach((c,idx)=>{
+    const always = c.always === true;             // 잠금 예외(항상 열림)
+    const done = c.dn ? c.dn() : !!S.done[c.id];
+    const locked = !always && !done && !prevCleared;
+    const mark = done ? "✅" : (locked ? "🔒" : "▸");
+    const row=elN(`<div class="course fade-up${locked?" locked":""}"><div class="ic">${c.icon}</div>
+      <div style="flex:1;"><div class="t">${c.t}</div><div class="d">${locked?"앞 장을 완료하면 열려요":c.d}</div></div>
+      <div class="done">${mark}</div></div>`);
+    if(locked){
+      row.onclick=()=>{ sfx.bad(); row.classList.add("shake"); setTimeout(()=>{ try{row.classList.remove("shake");}catch(e){} },450); };
+    }else{
+      row.onclick=()=>{ sfx.tap(); resetArm=false; c.open ? c.open() : startCh(c.id); };
+    }
+    stage.appendChild(row);
+    if(!always) prevCleared = done; // 잠금예외 항목은 흐름에 영향 안 줌
+  });
+  stage.appendChild(elN(`<div class="caption" style="text-align:center;">🔒 잠긴 장은 앞 장을 통과하면 열려요 · 완료한 장은 ✅로 저장돼 다시 안 해도 됩니다</div>`));
+  if(store.mode!=="local"){
+    stage.appendChild(elN(`<div class="caption" style="text-align:center; color:var(--red);">⚠️ 이 환경(미리보기 등)에서는 진행이 영구 저장되지 않을 수 있어요.<br/>파일을 Safari·Chrome 브라우저로 직접 열면 자동 저장됩니다.</div>`));
+  }
+  stage.appendChild(btnRow("🍼 이 앱의 원리 다시 보기","ghost",goIntro));
+  const rb=btnRow(resetArm?"⚠️ 한 번 더 누르면 모든 ✅가 사라져요":"🗑️ 진행 초기화","ghost",()=>{
+    if(!resetArm){ resetArm=true; renderHome(); }
+    else{ resetArm=false; S.done={}; save(); sfx.bad(); renderHome(); }
+  });
+  if(resetArm) rb.querySelector(".btn").style.color="var(--red)";
+  stage.appendChild(rb);
+}
+goIntro();  // 매번 앱의 원리부터
+</script>
+</body>
+</html>
