@@ -1,6 +1,6 @@
 /* Bump VERSION in sw.js and offline.js together when publishing changed assets. */
 'use strict';
-const VERSION = '2026-10-29.1';
+const VERSION = '2026-10-29.2';
 const PREFIX = 'malmun-app-';
 const SHELL_CACHE = PREFIX + VERSION + '-shell';
 const AUDIO_CACHE = PREFIX + 'audio-v1';

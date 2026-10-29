@@ -1,7 +1,7 @@
 /* Optional offline features. Keep VERSION in sync with sw.js. */
 (() => {
   'use strict';
-  const VERSION = '2026-10-29.1';
+  const VERSION = '2026-10-29.2';
   const AUDIO_CACHE = 'malmun-app-audio-v1';
   const BASE = new URL('./', document.currentScript && document.currentScript.src || document.baseURI);
   const MANIFEST = new URL('audio/manifest.json', BASE).href;
