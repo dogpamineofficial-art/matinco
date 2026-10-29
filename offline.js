@@ -1,7 +1,7 @@
 /* Optional offline features. Keep VERSION in sync with sw.js. */
 (() => {
   'use strict';
-  const VERSION = '2026-10-29.3';
+  const VERSION = '2026-10-30.1';
   const AUDIO_CACHE = 'malmun-app-audio-v2';
   const BASE = new URL('./', document.currentScript && document.currentScript.src || document.baseURI);
   const MANIFEST = new URL('audio/manifest.json', BASE).href;
@@ -11,7 +11,7 @@
     shellReady: false, shellMissing: [], updateAvailable: false,
     audio: { status: 'idle', total: 0, completed: 0, failed: 0 }
   };
-  let registration = null, registering = null, audioJob = null, progressListener = null;
+  let registration = null, registering = null, audioJob = null, progressListener = null, lastUpdateCheck = 0;
   const snapshot = () => ({ ...state, shellMissing: [...state.shellMissing], audio: { ...state.audio } });
   function publish() { window.dispatchEvent(new CustomEvent('malmun:offline', { detail: snapshot() })); }
   function notify(message) { if (typeof toast === 'function') toast(message); }
@@ -26,7 +26,7 @@
     state.shellReady = Boolean(data.ready);
     state.shellMissing = Array.isArray(data.missing) ? data.missing : [];
     state.serviceWorker = data.error ? 'error' : 'ready';
-    if (data.version && data.version !== VERSION) state.updateAvailable = true;
+    if (data.version) state.updateAvailable = data.version !== VERSION;
     publish();
   }
   function askWorker(type) {
@@ -143,6 +143,7 @@
     registering = (async () => {
       try {
         registration = await navigator.serviceWorker.register(new URL('sw.js', BASE).href, { scope: BASE.pathname, updateViaCache: 'none' });
+        lastUpdateCheck = Date.now();
         state.serviceWorker = 'registered'; publish();
         if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
         const watched = new WeakSet();
@@ -171,6 +172,8 @@
 
   if (supported) {
     navigator.serviceWorker.addEventListener('message', event => acceptShell(event.data));
+    // The activating worker migrates old tabs itself. Reloading here as well
+    // would duplicate that navigation and would also reload first-time visitors.
     navigator.serviceWorker.addEventListener('controllerchange', () => { askWorker('SHELL_STATUS'); });
     if (document.readyState === 'complete') register();
     else window.addEventListener('load', register, { once: true });
@@ -181,6 +184,11 @@
     const current = registration || await register();
     if (current) current.update().catch(() => {});
     if (!state.shellReady) askWorker('PRECACHE_SHELL');
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden || !navigator.onLine || !registration || Date.now() - lastUpdateCheck < 60000) return;
+    lastUpdateCheck = Date.now();
+    registration.update().catch(() => {});
   });
   window.addEventListener('offline', () => {
     state.online = false; publish();

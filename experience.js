@@ -14,13 +14,13 @@ renderStep=function(){
   const tools=elN('<div class="lesson-tools"><span>한글로 읽고, 소리 내어 말해보세요.</span><button>조사 노트 열기 ↗</button></div>');
   tools.querySelector('button').onclick=()=>openGuide();stage.prepend(tools);
 };
-function syncVoice(){const b=$('#voicebtn');b.innerHTML=S.voice?soundIcon:muteIcon;b.classList.toggle('on',S.voice);b.setAttribute('aria-pressed',String(S.voice));b.setAttribute('title',S.voice?'발음 듣기 켜짐 · 눌러서 끄기':'발음 듣기 꺼짐 · 눌러서 켜기');}
+function syncVoice(){const b=$('#voicebtn');b.innerHTML=(S.voice?soundIcon:muteIcon)+'<span>자동 음성</span>';b.classList.toggle('on',S.voice);b.setAttribute('aria-pressed',String(S.voice));b.setAttribute('aria-label',S.voice?'자동 음성 켜짐 · 눌러서 끄기':'자동 음성 꺼짐 · 눌러서 켜기');b.setAttribute('title',(S.voice?'정답과 문장 완성 때 자동으로 읽어요.':'정답과 문장 완성 때 자동으로 읽지 않아요.')+' 듣기 버튼은 언제든 사용할 수 있어요.');}
 $('#voicebtn').addEventListener('click',()=>queueMicrotask(syncVoice));
 $('#homebtn').textContent='↖';$('#homebtn').setAttribute('aria-label','학습 홈으로');
 function esc(t){return String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 let toastTimer;
 function toast(message){document.querySelector('.toast')?.remove();clearTimeout(toastTimer);const node=elN('<div class="toast" role="status"></div>');node.textContent=message;document.body.append(node);toastTimer=setTimeout(()=>node.remove(),2800);}
-function listen(text){if(!S.voice){S.voice=true;save();syncVoice();}speak(text);}
+function listen(text){speak(text,{manual:true});}
 
 const groups=[{name:'전체',from:0,to:15},{name:'기초',from:0,to:2},{name:'말 만들기',from:2,to:6},{name:'실전',from:6,to:9},{name:'심화',from:9,to:15}];
 let courseGroup=0;

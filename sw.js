@@ -1,10 +1,13 @@
 /* Bump VERSION in sw.js and offline.js together when publishing changed assets. */
 'use strict';
-const VERSION = '2026-10-29.3';
+const VERSION = '2026-10-30.1';
 const PREFIX = 'malmun-app-';
 const SHELL_CACHE = PREFIX + VERSION + '-shell';
 const AUDIO_CACHE = PREFIX + 'audio-v2';
+const LEGACY_AUDIO_CACHE = PREFIX + 'audio-v1';
 const BASE = new URL(self.registration.scope);
+const MIGRATION_KEY = new URL('__malmun_update_state__.json', BASE).href;
+let migrationQueue = Promise.resolve();
 const SHELL_FILES = [
   './', 'index.html', 'refined.css', 'experience.js', 'particles.js',
   'offline.js', 'speech-pack.js', 'assets/kyoto-evening.png',
@@ -67,14 +70,54 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    // Only this application's obsolete caches may be removed.
-    const keep = new Set([SHELL_CACHE, AUDIO_CACHE]);
-    await Promise.all((await caches.keys()).filter(name => name.startsWith(PREFIX) && !keep.has(name)).map(name => caches.delete(name)));
+    const existingCaches = await caches.keys();
+    const upgrading = existingCaches.some(name => name.startsWith(PREFIX) && name.endsWith('-shell') && name !== SHELL_CACHE);
+    // Capture existing tabs before claiming them. Old releases have no reload
+    // handler, so the new worker must replace their in-memory HTML/JS itself.
+    const windows = (await self.clients.matchAll({ type: 'window', includeUncontrolled: true })).filter(client => {
+      const url = new URL(client.url);
+      return url.origin === BASE.origin && url.pathname.startsWith(BASE.pathname);
+    });
+    if (upgrading && windows.length) {
+      const cache = await caches.open(SHELL_CACHE);
+      await cache.put(MIGRATION_KEY, new Response(JSON.stringify({ pending: windows.map(client => client.id), failed: [], caches: existingCaches })));
+    } else await removeObsoleteCaches(existingCaches);
     await self.clients.claim();
     const state = await shellStatus();
-    for (const client of await self.clients.matchAll({ type: 'window' })) client.postMessage(state);
+    for (const client of windows) client.postMessage(state);
+    // Do not await client.navigate here: its document request may wait for this
+    // activation to finish. Old .2/.3 clients send SHELL_STATUS on controllerchange;
+    // their message below triggers migration after activation has completed.
   })());
 });
+
+async function removeObsoleteCaches(names) {
+  const keep = new Set([SHELL_CACHE, AUDIO_CACHE]);
+  await Promise.all(names.filter(name => name.startsWith(PREFIX) && !keep.has(name)).map(name => caches.delete(name)));
+}
+
+function migrateOldClient(client) {
+  migrationQueue = migrationQueue.catch(() => {}).then(async () => {
+    if (!client || typeof client.navigate !== 'function') return;
+    const cache = await caches.open(SHELL_CACHE), response = await cache.match(MIGRATION_KEY);
+    if (!response) return;
+    const record = await response.json();
+    if (!record.pending.includes(client.id)) return;
+    // Persist the one-time attempt before navigation; a new document or worker
+    // restart must never navigate the same client in a loop.
+    record.pending = record.pending.filter(id => id !== client.id);
+    record.failed.push(client.id);
+    await cache.put(MIGRATION_KEY, new Response(JSON.stringify(record)));
+    try {
+      if (await client.navigate(client.url)) record.failed = record.failed.filter(id => id !== client.id);
+    } catch (_) { /* Keep legacy caches when replacement fails. */ }
+    if (!record.pending.length && !record.failed.length) {
+      await removeObsoleteCaches(record.caches);
+      await cache.delete(MIGRATION_KEY);
+    } else await cache.put(MIGRATION_KEY, new Response(JSON.stringify(record)));
+  });
+  return migrationQueue;
+}
 
 self.addEventListener('message', event => {
   const type = event.data && event.data.type;
@@ -86,6 +129,9 @@ self.addEventListener('message', event => {
     catch (error) { state = { type: 'SHELL_STATUS', version: VERSION, ready: false, missing: [], error: String(error.message || error) }; }
     if (event.ports && event.ports[0]) event.ports[0].postMessage(state);
     else if (event.source) event.source.postMessage(state);
+    // Learning progress was already persisted by renderStep/save in malmun_v1.
+    // The page returns to its saved "continue learning" entry after replacement.
+    await migrateOldClient(event.source);
   })());
 });
 
@@ -104,6 +150,21 @@ async function networkFirst(request, cacheName, event, navigation) {
       status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   }
+}
+
+async function coherentNavigation(request, event) {
+  const url = new URL(request.url);
+  const indexURL = new URL('index.html', BASE);
+  const legacyURL = new URL('말문일본어_v1.3.html', BASE);
+  if (![BASE.pathname, indexURL.pathname, legacyURL.pathname].includes(url.pathname)) {
+    return networkFirst(request, SHELL_CACHE, event, true);
+  }
+  // HTML and its unversioned scripts must come from the same completed shell.
+  // A new worker prepares the whole next shell before replacing existing tabs.
+  // Root/index.html and query/hash entry variants share the canonical document.
+  const cache = await caches.open(SHELL_CACHE);
+  const cached = await cache.match(indexURL.href) || await cache.match(BASE.href);
+  return cached || networkFirst(request, SHELL_CACHE, event, true);
 }
 
 async function rangeResponse(response, range) {
@@ -126,7 +187,7 @@ async function rangeResponse(response, range) {
 async function cacheFirst(request, cacheName, event, audio) {
   const cache = await caches.open(cacheName);
   // Cache keys do not include Range; stored audio is always the complete file.
-  const cached = await cache.match(request.url);
+  const cached = await cache.match(request.url) || (audio && await caches.match(request.url, { cacheName: LEGACY_AUDIO_CACHE }));
   if (cached) return audio && request.headers.has('Range') ? rangeResponse(cached, request.headers.get('Range')) : cached;
   try {
     const response = await fetch(request);
@@ -144,7 +205,7 @@ self.addEventListener('fetch', event => {
   const request = event.request, url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== BASE.origin || !url.pathname.startsWith(BASE.pathname)) return;
   if (request.mode === 'navigate') {
-    event.respondWith(networkFirst(request, SHELL_CACHE, event, true));
+    event.respondWith(coherentNavigation(request, event));
   } else if (url.href === new URL('audio/manifest.json', BASE).href) {
     event.respondWith(networkFirst(request, AUDIO_CACHE, event, false));
   } else if (url.pathname.startsWith(new URL('audio/', BASE).pathname) && /\.mp3$/i.test(url.pathname)) {

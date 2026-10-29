@@ -53,7 +53,7 @@
       eyebrow:"조사 확장 · " + p.sound + " " + p.kana,
       title,
       html:`<div class="formula">한국어 구조</div><p><b>${structure}</b></p><div class="bigword">${p.example}</div><p>${p.translation}</p><details class="jp-support"><summary>일본어 원문 보기</summary><p lang="ja">${p.japanese}</p></details><p>${p.note}</p>`,
-      extra:root => root.appendChild(btnRow("예문 듣기", "ghost", () => speak(p.example)))
+      extra:root => root.appendChild(btnRow("예문 듣기", "ghost", () => listen(p.example)))
     });
   }
   const pairText = (sound, japanese, translation) => `<p><b>${sound}</b><br/>${translation}<br/><small lang="ja">${japanese}</small></p>`;
@@ -72,7 +72,7 @@
       particleLesson("요", "내가 아는 걸 알려 줄 때", "이 가게는 맛있다 + 알려 주는 말끝"),
       lesson({eyebrow:"헷갈리는 조사 01", title:"와(は)와 가(が), 어디에 초점을 둘까요?", html:`<b>와</b>는 ‘~에 관해서 말하면’ 하고 화제를 꺼내요. <b>가</b>는 누가·무엇이 그런지 짚어요.${pairText("와타시와 칸코쿠진데스","私は韓国人です。","자기소개: 저는 한국인입니다.")}${pairText("와타시가 요야쿠시마시타","私が予約しました。","누가 예약했나요? → 제가 예약했습니다.")}문장만 떼어 놓으면 둘 다 가능한 경우도 있어요. <b>앞에서 무엇을 물었는지</b> 함께 보세요.`}),
       lesson({eyebrow:"헷갈리는 조사 02", title:"니(に)와 데(で), 위치인가요 행동인가요?", html:`<b>어디에 있다 → 니.</b> <b>어디에서 먹다·마시다 → 데.</b>${pairText("호테루니 이마스","ホテルにいます。","호텔에 있습니다. (있는 위치)")}${pairText("호테루데 아사고항오 타베마스","ホテルで朝ごはんを食べます。","호텔에서 아침을 먹습니다. (행동의 장소)")}니는 ‘호텔에 갑니다’의 도착점이나 ‘7시에’의 시각에도 써요. 먼저 <b>뒤에 오는 말의 의미</b>를 확인하세요.`}),
-      lesson({eyebrow:"질문 부품 · 왜", title:"‘왜’는 나제(なぜ)로 연습해요", html:`<b>왜 + 싼 건가요?</b>${pairText("나제 야스이노데스카","なぜ安いのですか。","왜 싼 건가요?")}기본 질문어는 <b>나제</b>로 익혀요. 도우시테(どうして)도 이유를 묻는 ‘왜’로 쓰입니다. 말투의 느낌은 상황과 문장 전체에 따라 달라져요.<br/><br/><small>‘노데스카’는 사정이나 설명을 물을 때 쓰는 말끝이에요. 지금은 문장째 말해 보세요.</small>`,extra:root => root.appendChild(btnRow("나제 예문 듣기","ghost",()=>speak("나제 야스이노데스카")))}),
+      lesson({eyebrow:"질문 부품 · 왜", title:"‘왜’는 나제(なぜ)로 연습해요", html:`<b>왜 + 싼 건가요?</b>${pairText("나제 야스이노데스카","なぜ安いのですか。","왜 싼 건가요?")}기본 질문어는 <b>나제</b>로 익혀요. 도우시테(どうして)도 이유를 묻는 ‘왜’로 쓰입니다. 말투의 느낌은 상황과 문장 전체에 따라 달라져요.<br/><br/><small>‘노데스카’는 사정이나 설명을 물을 때 쓰는 말끝이에요. 지금은 문장째 말해 보세요.</small>`,extra:root => root.appendChild(btnRow("나제 예문 듣기","ghost",()=>listen("나제 야스이노데스카")))}),
       buildDrill({tag:"조사로 한 문장 만들기", formula:"한국어 뜻을 보고, 발음 조각을 차례로 담아요", rounds:[
         {ko:"버스는 택시보다 쌉니다", parts:["바스와","타쿠시이요리","야스이데스"], jp:"바스와 타쿠시이요리 야스이데스"},
         {ko:"물밖에 마시지 않습니다", parts:["미즈시카","노미마센"], jp:"미즈시카 노미마센"}
