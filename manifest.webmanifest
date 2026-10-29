@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "말문일본어",
+  "short_name": "말문일본어",
+  "description": "한국어 구조에서 시작해, 여행에서 직접 말하는 일본어.",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5f0",
+  "theme_color": "#26372f",
+  "categories": ["education", "travel"],
+  "icons": [
+    { "src": "icons/app-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/app-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/app.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

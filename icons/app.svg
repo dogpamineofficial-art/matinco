@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="열린 문과 말풍선">
+  <rect width="512" height="512" fill="#f6f5f0"/>
+  <path d="M150 369V157a14 14 0 0 1 14-14h141a14 14 0 0 1 14 14v212" fill="none" stroke="#26372f" stroke-width="20" stroke-linecap="round"/>
+  <path d="m184 160 96 31v174l-96 29z" fill="#26372f"/>
+  <path d="M251 267v23" stroke="#f6f5f0" stroke-width="10" stroke-linecap="round"/>
+  <path d="M282 138h75a25 25 0 0 1 25 25v43a25 25 0 0 1-25 25h-24l-31 26v-26h-20a25 25 0 0 1-25-25v-43a25 25 0 0 1 25-25Z" fill="#8e7045" stroke="#f6f5f0" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M286 176h65m-65 24h43" fill="none" stroke="#fffefa" stroke-width="9" stroke-linecap="round"/>
+  <path d="M132 395h192" stroke="#26372f" stroke-width="12" stroke-linecap="round"/>
+</svg>
