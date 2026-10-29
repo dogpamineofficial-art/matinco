@@ -265,7 +265,9 @@ function tone(f,dur,delay=0,type="sine",vol=.1){
     const o=actx.createOscillator(), g=actx.createGain();
     o.type=type; o.frequency.value=f; o.connect(g); g.connect(actx.destination);
     const t=actx.currentTime+delay;
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.015);
+    // Keep feedback sounds below the Japanese pronunciation track.
+    const level=S.voice?vol*.25:vol;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(level,t+.015);
     g.gain.exponentialRampToValueAtTime(.0001,t+dur);
     o.start(t); o.stop(t+dur+.05);
   }catch(e){}
@@ -1293,15 +1295,30 @@ function transformStep({tails, intro, btn}){
   };
 }
 /* 범용 표 스텝 */
-function tblStep({eyebrow, rows, cols, caption, btn, tone}){
+function tblStep({eyebrow, rows, cols, caption, btn, tone, speakCols}){
   return (root)=>{
     const card=elN(`<div class="card fade-up"><div class="eyebrow gold-t">${eyebrow}</div>
       <table class="tbl" style="margin-top:6px;"><tbody></tbody></table></div>`);
     const tb=card.querySelector("tbody");
     rows.forEach(r=>{
-      const tr=document.createElement("tr"); tr.className="say";
-      tr.innerHTML=cols.map((c,ci)=>`<td>${r[c]}${ci===0?' <span class="spk">🔊</span>':''}</td>`).join("");
-      tr.onclick=()=>{ sfx.tap(); speak(r[cols[0]]); };
+      const tr=document.createElement("tr");
+      if(speakCols){
+        cols.forEach(c=>{
+          const td=document.createElement("td"); const canSpeak=speakCols.includes(c);
+          td.innerHTML=`${r[c]}${canSpeak?' <span class="spk">🔊</span>':''}`;
+          if(canSpeak){
+            td.className="say"; td.tabIndex=0; td.setAttribute("role","button");
+            td.setAttribute("aria-label",String(r[c]).split(" = ")[0]+" 듣기");
+            td.onclick=()=>{ sfx.tap(); speak(String(r[c]).split(" = ")[0]); };
+            td.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); e.stopPropagation(); td.click(); } };
+          }
+          tr.appendChild(td);
+        });
+      }else{
+        tr.className="say";
+        tr.innerHTML=cols.map((c,ci)=>`<td>${r[c]}${ci===0?' <span class="spk">🔊</span>':''}</td>`).join("");
+        tr.onclick=()=>{ sfx.tap(); speak(r[cols[0]]); };
+      }
       tb.appendChild(tr);
     });
     root.appendChild(card);
@@ -1503,7 +1520,7 @@ CHS.ch3 = { id:"ch3", title:"존댓말은 공식처럼", eyebrow:"3장 · 존댓
   buildDrill({tag:"과거형 ×5", formula:"⏪ 과거 — 루 빼고 + 마시타 = ~했습니다", rounds:formRounds("마시타",["마스","마센"],["라멘오 타베마시타","라멘을 먹었습니다"])}),
   buildDrill({tag:"부탁형 ×5", formula:"👉 명령형이 부탁형으로 — 테(~해!) + 구다사이(주세요)", rounds:formRounds("테 구다사이",["마쇼"],["라멘오 타베테 구다사이","라멘을 먹어 주세요"])}),
   buildDrill({tag:"부정형 ×5", formula:"🚫 부정 — 루 빼고 + 마센 = ~하지 않습니다", rounds:formRounds("마센",["나이","마스"],["라멘오 타베마센","라멘을 먹지 않습니다"])}),
-  tblStep({eyebrow:"🪞 반말 ↔ 존댓말 짝표 (한눈에)", rows:PAIRS, cols:["f","b","j"],
+  tblStep({eyebrow:"🪞 반말 ↔ 존댓말 짝표 (한눈에)", rows:PAIRS, cols:["f","b","j"], speakCols:["b","j"],
     caption:"형태당 5문제씩 손에 새긴 7개를 한 표로 — <b>명령→부탁(테 구다사이)</b> 변신까지!", btn:"마지막 — 무오답 10문제 ▸", tone:"coral"}),
   gauntlet({tag:"존댓말 7형 무오답 관문", n:10, bank:[
     {q:`"<b>먹습니다</b>"는?`, opts:["타베마스","타베마스카","타베마쇼","타베마시타"], a:"타베마스", r:"타베마스 = 먹습니다", akr:"기본 = 마스"},

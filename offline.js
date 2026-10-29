@@ -1,8 +1,8 @@
 /* Optional offline features. Keep VERSION in sync with sw.js. */
 (() => {
   'use strict';
-  const VERSION = '2026-10-29.2';
-  const AUDIO_CACHE = 'malmun-app-audio-v1';
+  const VERSION = '2026-10-29.3';
+  const AUDIO_CACHE = 'malmun-app-audio-v2';
   const BASE = new URL('./', document.currentScript && document.currentScript.src || document.baseURI);
   const MANIFEST = new URL('audio/manifest.json', BASE).href;
   const supported = Boolean(window.isSecureContext && 'serviceWorker' in navigator && 'caches' in window);
@@ -127,7 +127,7 @@
           }
         }));
         progress({ status: failed ? 'partial' : 'ready', completed, failed });
-        notify(failed ? '일부 음성을 받지 못했어요. 다시 누르면 나머지만 저장합니다.' : '기본 음성을 저장했어요. 인터넷 없이 다시 들을 수 있어요.');
+        notify(failed ? '일부 음성을 받지 못했어요. 다시 누르면 나머지만 저장합니다.' : '일본어 음성을 저장했어요. 인터넷 없이 다시 들을 수 있어요.');
         return { ...state.audio };
       } catch (error) {
         progress({ status: 'error' });

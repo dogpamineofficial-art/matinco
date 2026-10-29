@@ -1,0 +1,17 @@
+음성 제작: VOICEVOX Nemo
+Voice credit: VOICEVOX Nemo
+
+말문일본어는 일본어 원문으로 사전 생성한 여성 합성음성을 사용합니다.
+화자: VOICEVOX Nemo 女声6 / style ID 10006
+속도: 0.94 / 음원: 24 kHz 모노 MP3
+제작 도구: VOICEVOX Core 0.17.1, Nemo n0 VVM 0.17.0
+
+생성 음성은 크레딧을 표시하여 상업·비상업 용도로 사용할 수 있습니다.
+음성을 별도로 재사용할 때에도 위 크레딧과 공식 이용조건을 준수해야 합니다.
+앱에는 생성된 음성 파일을 포함하며, 합성 엔진이나 모델은 포함하지 않습니다.
+실제 사람의 신규 녹음이나 발음 평가 기능으로 표시하지 마세요.
+
+공식 소개: https://voicevox.hiroshiba.jp/nemo/
+공식 이용약관: https://voicevox.hiroshiba.jp/nemo/term/
+모델·크레딧: https://github.com/VOICEVOX/voicevox_vvm/blob/0.17.0/README.md
+확인일: 2026-10-29

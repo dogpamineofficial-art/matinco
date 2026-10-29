@@ -1,9 +1,9 @@
 /* Bump VERSION in sw.js and offline.js together when publishing changed assets. */
 'use strict';
-const VERSION = '2026-10-29.2';
+const VERSION = '2026-10-29.3';
 const PREFIX = 'malmun-app-';
 const SHELL_CACHE = PREFIX + VERSION + '-shell';
-const AUDIO_CACHE = PREFIX + 'audio-v1';
+const AUDIO_CACHE = PREFIX + 'audio-v2';
 const BASE = new URL(self.registration.scope);
 const SHELL_FILES = [
   './', 'index.html', 'refined.css', 'experience.js', 'particles.js',
