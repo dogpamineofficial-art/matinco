@@ -40,6 +40,9 @@ async function cacheShellFile(cache, url) {
 }
 
 async function prepareShell() {
+  // A ready shell is immutable for this version, including online recovery.
+  const existing = await shellStatus();
+  if (existing.ready) return existing;
   const cache = await caches.open(SHELL_CACHE);
   const missing = [];
   let cursor = 0;
